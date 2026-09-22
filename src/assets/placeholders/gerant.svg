@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1500" viewBox="0 0 1200 1500">
+  <!-- Visuel provisoire : à remplacer par une photo du gérant. -->
+  <rect width="1200" height="1500" fill="#E6E6E0"/>
+  <g fill="none" stroke="#1F2328" stroke-opacity=".12" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M0 260h260l70 70h240"/>
+    <path d="M1200 200h-250l-80 80h-120"/>
+    <path d="M0 1300h200l90-90h210"/>
+    <path d="M1200 1350h-220l-100-100h-140"/>
+  </g>
+  <g fill="#1F2328" fill-opacity=".2">
+    <circle cx="570" cy="330" r="9"/>
+    <circle cx="750" cy="280" r="9"/>
+    <circle cx="500" cy="1210" r="9"/>
+    <circle cx="740" cy="1250" r="9"/>
+  </g>
+  <circle cx="330" cy="330" r="11" fill="#E8A317"/>
+  <g fill="none" stroke="#1F2328" stroke-opacity=".3" stroke-width="12" stroke-linecap="round">
+    <circle cx="600" cy="640" r="150"/>
+    <path d="M330 1150c30-170 140-260 270-260s240 90 270 260"/>
+  </g>
+</svg>
