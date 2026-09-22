@@ -17,6 +17,11 @@ export default defineConfig({
   // le comportement HTML classique, plus sûr pour les pages de texte (mentions légales…).
   compressHTML: true,
 
+  build: {
+    // CSS (≈ 6 ko compressé) intégré à chaque page : aucune requête bloquante avant le premier affichage.
+    inlineStylesheets: 'always',
+  },
+
   integrations: [react(), sitemap()],
 
   image: {
