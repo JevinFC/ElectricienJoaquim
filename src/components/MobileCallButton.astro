@@ -1,0 +1,17 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../config/site.ts';
+
+// Affiché uniquement sous le point de rupture md. BaseLayout ajoute un padding-bottom
+// équivalent au <body> pour que ce bouton ne masque jamais le pied de page.
+const { telephone } = site.contact;
+---
+
+<a
+  href={`tel:${telephone.lien}`}
+  class="btn btn-primary fixed inset-x-4 bottom-4 z-40 shadow-[0_8px_24px_rgb(31_35_40/0.25)] md:hidden"
+>
+  <Icon name="telephone" class="size-5" />
+  <span>Appeler</span>
+  <span class="font-normal">{telephone.affichage}</span>
+</a>

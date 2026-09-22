@@ -1,0 +1,26 @@
+---
+import { icons, type IconName } from './icons.ts';
+
+interface Props {
+  name: IconName;
+  class?: string;
+  /** Texte alternatif. Sans lui, l'icône est décorative et masquée aux lecteurs d'écran. */
+  label?: string;
+}
+
+const { name, class: className = 'size-6', label } = Astro.props;
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class={className}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+><Fragment set:html={icons[name]} /></svg>

@@ -79,7 +79,10 @@ export interface SiteConfig {
     note: string;
   };
   zone: {
+    /** Complément de lieu repris dans le H1, les titres et les textes : « Électricien à Tours et en Indre-et-Loire ». */
+    libelle: string;
     departement: string;
+    numeroDepartement: string;
     /** Communes mises en avant sur le site et dans les données structurées (Schema.org). */
     communes: string[];
   };
@@ -149,7 +152,9 @@ export const site: SiteConfig = {
   },
 
   zone: {
-    departement: 'Indre-et-Loire (37)',
+    libelle: 'à Tours et en Indre-et-Loire',
+    departement: 'Indre-et-Loire',
+    numeroDepartement: '37',
     // TODO : confirmer la liste des communes mises en avant avec le client.
     communes: [
       'Tours',

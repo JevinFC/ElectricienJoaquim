@@ -1,0 +1,54 @@
+---
+import { site } from '../config/site.ts';
+import { joursSchema } from '../lib/format.ts';
+
+interface Props {
+  /** URL absolue de l'image représentative (image Open Graph de la page). */
+  image: string;
+}
+
+const { image } = Astro.props;
+const { entreprise, contact, horaires, zone, reseaux } = site;
+
+// Données structurées de l'entreprise (https://schema.org/Electrician), générées depuis la config.
+// Volontairement sans « aggregateRating » : Google n'accepte pas les avis publiés par l'entreprise elle-même.
+const donnees = {
+  '@context': 'https://schema.org',
+  '@type': 'Electrician',
+  '@id': `${site.url}/#entreprise`,
+  name: entreprise.nom,
+  url: `${site.url}/`,
+  image,
+  telephone: contact.telephone.lien,
+  email: contact.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: contact.adresse.rue,
+    postalCode: contact.adresse.codePostal,
+    addressLocality: contact.adresse.ville,
+    addressRegion: contact.adresse.region,
+    addressCountry: 'FR',
+  },
+  areaServed: [
+    ...zone.communes.map((name) => ({ '@type': 'City', name })),
+    { '@type': 'AdministrativeArea', name: zone.departement },
+  ],
+  founder: { '@type': 'Person', name: entreprise.gerant },
+  ...(horaires.plages.length > 0
+    ? {
+        openingHoursSpecification: horaires.plages.map((plage) => ({
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: joursSchema(plage.jours),
+          opens: plage.ouverture,
+          closes: plage.fermeture,
+        })),
+      }
+    : {}),
+  ...(reseaux.length > 0 ? { sameAs: reseaux } : {}),
+};
+
+// « < » échappé : aucune valeur ne peut fermer la balise <script>.
+const json = JSON.stringify(donnees).replace(/</g, '\\u003c');
+---
+
+<script type="application/ld+json" set:html={json}></script>

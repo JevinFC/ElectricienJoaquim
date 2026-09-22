@@ -1,0 +1,90 @@
+---
+import Icon from './Icon.astro';
+import Logotype from './Logotype.astro';
+import { site } from '../config/site.ts';
+import { formatPlage } from '../lib/format.ts';
+
+const { entreprise, contact, horaires, zone } = site;
+const annee = new Date().getFullYear();
+
+const liens = [
+  { href: '/', label: 'Accueil' },
+  { href: '/services/', label: 'Services' },
+  { href: '/realisations/', label: 'Réalisations' },
+  { href: '/a-propos/', label: 'À propos' },
+  { href: '/contact/', label: 'Contact et devis' },
+];
+---
+
+<footer class="surface-dark bg-ink text-paper">
+  <div class="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <div>
+      <Logotype />
+      <p class="mt-4 max-w-xs text-mist">
+        Électricien {zone.libelle}&nbsp;: installation neuve, rénovation et tableaux électriques. Devis gratuit.
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold tracking-wide text-mist uppercase">Contact</h2>
+      <ul class="mt-4 space-y-3">
+        <li>
+          <a href={`tel:${contact.telephone.lien}`} class="inline-flex items-center gap-2 font-bold hover:underline">
+            <Icon name="telephone" class="size-5 shrink-0 text-accent" />
+            {contact.telephone.affichage}
+          </a>
+        </li>
+        <li>
+          <a href={`mailto:${contact.email}`} class="inline-flex items-center gap-2 break-all hover:underline">
+            <Icon name="email" class="size-5 shrink-0 text-accent" />
+            {contact.email}
+          </a>
+        </li>
+        <li class="flex gap-2 text-mist">
+          <Icon name="localisation" class="size-5 shrink-0 text-accent" />
+          <span>
+            {contact.adresse.rue}<br />
+            {contact.adresse.codePostal}
+            {contact.adresse.ville}
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold tracking-wide text-mist uppercase">Horaires</h2>
+      <ul class="mt-4 space-y-2 text-mist">
+        {horaires.plages.map((plage) => <li>{formatPlage(plage)}</li>)}
+        {horaires.note && <li>{horaires.note}</li>}
+      </ul>
+      <p class="mt-4 text-mist">Intervention {zone.libelle}.</p>
+    </div>
+
+    <nav aria-label="Pied de page">
+      <h2 class="text-sm font-bold tracking-wide text-mist uppercase">Navigation</h2>
+      <ul class="mt-4 space-y-2">
+        {
+          liens.map(({ href, label }) => (
+            <li>
+              <a href={href} class="hover:underline">
+                {label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+
+  <div class="border-t border-white/10">
+    <div
+      class="container-page flex flex-col gap-3 py-6 text-sm text-mist sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p>© {annee} {entreprise.nom}</p>
+      <ul class="flex flex-wrap gap-x-6 gap-y-2">
+        <li><a href="/mentions-legales/" class="hover:underline">Mentions légales</a></li>
+        <li><a href="/confidentialite/" class="hover:underline">Politique de confidentialité</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>

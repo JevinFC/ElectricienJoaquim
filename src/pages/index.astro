@@ -1,17 +1,20 @@
 ---
-
+import CtaBanner from '../components/CtaBanner.astro';
+import Hero from '../components/Hero.astro';
+import ReviewsSection from '../components/ReviewsSection.astro';
+import TrustSection from '../components/TrustSection.astro';
+import ZoneSection from '../components/ZoneSection.astro';
+import { site } from '../config/site.ts';
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout
+  title={`Électricien ${site.zone.libelle}`}
+  description="Électricien à Tours et en Indre-et-Loire : installation électrique neuve, rénovation et mise aux normes de tableaux électriques. Devis gratuit."
+>
+  <Hero />
+  <TrustSection />
+  <ReviewsSection />
+  <ZoneSection />
+  <CtaBanner />
+</BaseLayout>

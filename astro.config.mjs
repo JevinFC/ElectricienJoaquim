@@ -20,9 +20,11 @@ export default defineConfig({
   integrations: [react(), sitemap()],
 
   image: {
-    // Génère automatiquement srcset et sizes pour chaque <Image />.
+    // Génère automatiquement srcset et sizes pour chaque <Image />. Les styles responsives
+    // d'Astro (responsiveStyles) restent désactivés : le preflight de Tailwind applique déjà
+    // max-width: 100% et height: auto aux images, et leur couche CSS passerait devant les
+    // classes utilitaires.
     layout: 'constrained',
-    responsiveStyles: true,
   },
 
   env: {

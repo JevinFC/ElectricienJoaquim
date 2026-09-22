@@ -1,0 +1,44 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import { formatDateIso, formatMoisAnnee } from '../lib/format.ts';
+
+interface Props {
+  realisation: CollectionEntry<'realisations'>;
+  /** Titre du service lié, affiché au-dessus du titre du chantier. */
+  service: string;
+  /** Niveau du titre, selon la hiérarchie de la page. */
+  headingLevel?: 2 | 3;
+}
+
+const { realisation, service, headingLevel = 3 } = Astro.props;
+const Titre = headingLevel === 2 ? 'h2' : 'h3';
+const { titre, ville, date, couverture, exemple } = realisation.data;
+---
+
+<article
+  class="group relative flex h-full flex-col overflow-hidden rounded-xl border border-line bg-white transition-colors hover:border-ink has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-ink"
+>
+  <div class="relative">
+    <Image
+      src={couverture.src}
+      alt={couverture.alt}
+      width={800}
+      height={600}
+      sizes="(min-width: 1024px) 368px, (min-width: 640px) 50vw, 100vw"
+      class="aspect-[4/3] w-full object-cover"
+    />
+    {exemple && <span class="badge absolute top-3 left-3">Exemple</span>}
+  </div>
+  <div class="flex flex-1 flex-col p-5">
+    <p class="text-sm text-muted">{service}</p>
+    <Titre class="mt-1 text-lg leading-snug font-bold">
+      <a href={`/realisations/#realisation-${realisation.id}`} class="after:absolute after:inset-0 focus-visible:outline-none">
+        {titre}
+      </a>
+    </Titre>
+    <p class="mt-auto pt-3 text-sm text-muted">
+      {ville} · <time datetime={formatDateIso(date)}>{formatMoisAnnee(date)}</time>
+    </p>
+  </div>
+</article>

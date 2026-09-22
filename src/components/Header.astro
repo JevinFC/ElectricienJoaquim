@@ -1,0 +1,114 @@
+---
+import Icon from './Icon.astro';
+import Logotype from './Logotype.astro';
+import { site } from '../config/site.ts';
+
+const navigation = [
+  { href: '/services/', label: 'Services' },
+  { href: '/realisations/', label: 'Réalisations' },
+  { href: '/a-propos/', label: 'À propos' },
+  { href: '/contact/', label: 'Contact' },
+];
+
+const cheminActuel = Astro.url.pathname;
+const { telephone } = site.contact;
+---
+
+<header class="sticky top-0 z-40 border-b border-line bg-paper">
+  <div class="container-page flex h-16 items-center gap-4 lg:h-20">
+    <a href="/" class="-m-1 rounded-md p-1" aria-label={`${site.entreprise.nom} Électricité, accueil`}>
+      <Logotype />
+    </a>
+
+    <nav aria-label="Navigation principale" class="ml-auto">
+      <ul
+        id="menu-principal"
+        data-open="false"
+        class="absolute inset-x-0 top-full hidden border-b border-line bg-paper px-4 pb-4 shadow-[0_16px_24px_-16px_rgb(31_35_40/0.3)] data-[open=true]:block sm:px-6 lg:static lg:flex lg:items-center lg:gap-8 lg:border-0 lg:p-0 lg:shadow-none"
+      >
+        {
+          navigation.map(({ href, label }) => (
+            <li class="border-t border-line first:border-t-0 lg:border-0">
+              <a
+                href={href}
+                aria-current={cheminActuel.startsWith(href) ? 'page' : undefined}
+                class="block py-4 text-lg font-bold decoration-2 underline-offset-8 hover:underline hover:decoration-accent aria-[current=page]:underline aria-[current=page]:decoration-ink lg:py-2 lg:text-base"
+              >
+                {label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href={`tel:${telephone.lien}`} class="btn btn-primary hidden md:inline-flex">
+        <Icon name="telephone" class="size-5" />
+        {telephone.affichage}
+      </a>
+      <button
+        type="button"
+        class="group -mr-2 inline-flex size-12 items-center justify-center rounded-lg lg:hidden"
+        aria-expanded="false"
+        aria-controls="menu-principal"
+        data-menu-toggle
+      >
+        <Icon name="menu" class="size-7 group-aria-expanded:hidden" />
+        <Icon name="fermer" class="hidden size-7 group-aria-expanded:block" />
+        <span class="sr-only" data-menu-label>Ouvrir le menu</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Menu mobile : bouton burger accessible (aria-expanded, Échap, gestion du focus).
+  const bouton = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.getElementById('menu-principal');
+  const libelle = bouton?.querySelector('[data-menu-label]');
+  const ecranLarge = window.matchMedia('(min-width: 64rem)');
+
+  if (bouton && menu) {
+    const estOuvert = () => bouton.getAttribute('aria-expanded') === 'true';
+
+    const basculer = (ouvert: boolean, { focusBouton = false } = {}) => {
+      bouton.setAttribute('aria-expanded', String(ouvert));
+      menu.dataset.open = String(ouvert);
+      if (libelle) libelle.textContent = ouvert ? 'Fermer le menu' : 'Ouvrir le menu';
+      if (ouvert) menu.querySelector('a')?.focus();
+      else if (focusBouton) bouton.focus();
+    };
+
+    bouton.addEventListener('click', () => basculer(!estOuvert()));
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && estOuvert()) basculer(false, { focusBouton: true });
+    });
+
+    // Fermeture au clic en dehors du menu.
+    document.addEventListener('click', (event) => {
+      const cible = event.target;
+      if (estOuvert() && cible instanceof Node && !menu.contains(cible) && !bouton.contains(cible)) {
+        basculer(false);
+      }
+    });
+
+    // Fermeture quand le focus clavier quitte le menu.
+    menu.addEventListener('focusout', (event) => {
+      const suivant = event.relatedTarget;
+      if (estOuvert() && suivant instanceof Node && !menu.contains(suivant) && !bouton.contains(suivant)) {
+        basculer(false);
+      }
+    });
+
+    menu.addEventListener('click', (event) => {
+      if (event.target instanceof Element && event.target.closest('a')) basculer(false);
+    });
+
+    // Retour à l'affichage desktop : le menu redevient une barre de navigation.
+    ecranLarge.addEventListener('change', (event) => {
+      if (event.matches && estOuvert()) basculer(false);
+    });
+  }
+</script>
