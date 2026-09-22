@@ -162,7 +162,7 @@ export default function Gallery({ items, services }: Props) {
                   alt={item.couverture.alt}
                   loading={position < 3 ? 'eager' : 'lazy'}
                   decoding="async"
-                  className="aspect-[4/3] w-full object-cover"
+                  className="aspect-4/3 w-full object-cover"
                 />
                 {item.exemple && <span className="badge absolute top-3 left-3">Exemple</span>}
                 <span className="absolute right-3 bottom-3 rounded-md bg-ink/85 px-2 py-1 text-xs font-bold text-paper">
@@ -197,7 +197,7 @@ export default function Gallery({ items, services }: Props) {
         onClose={fermer}
         onKeyDown={surTouche}
         onClick={surClic}
-        className="surface-dark fixed inset-0 m-0 size-full max-h-none max-w-none border-0 bg-transparent p-0 text-paper backdrop:bg-ink/95"
+        className="surface-dark fixed inset-0 m-0 size-full max-h-none max-w-none border-0 bg-transparent p-0 text-paper backdrop:bg-ink"
       >
         {courant && photo && selection && (
           <div data-fond className="mx-auto flex h-full max-w-6xl flex-col px-4 py-4 sm:px-8 sm:py-6">

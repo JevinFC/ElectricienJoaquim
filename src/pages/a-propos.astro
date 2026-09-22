@@ -1,0 +1,143 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '../assets/placeholders/gerant.svg';
+import CtaBanner from '../components/CtaBanner.astro';
+import Icon from '../components/Icon.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { site } from '../config/site.ts';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const { entreprise, assuranceDecennale, certifications, zone } = site;
+
+// TODO : étapes à valider avec le client (elles décrivent sa façon de travailler).
+const etapes = [
+  {
+    titre: 'Premier échange',
+    texte: "Vous m'expliquez votre projet par téléphone ou via le formulaire de contact.",
+  },
+  {
+    titre: 'Visite et devis',
+    texte: 'Je viens voir le chantier ou l’installation existante, puis je vous remets un devis détaillé et gratuit.',
+  },
+  {
+    titre: 'Réalisation',
+    texte: 'Les travaux sont réalisés selon la norme NF C 15-100, aux dates convenues ensemble.',
+  },
+  {
+    titre: 'Mise en service',
+    texte: 'Je vous présente votre installation et votre tableau électrique avant de quitter le chantier.',
+  },
+];
+---
+
+<BaseLayout
+  title={`${entreprise.gerant}, électricien ${zone.libelle}`}
+  description={`Présentation de ${entreprise.gerant}, électricien à son compte ${zone.libelle} : parcours, méthode de travail et garanties.`}
+>
+  <PageHeader
+    fil={[{ href: '/', label: 'Accueil' }]}
+    filCourant="À propos"
+    eyebrow="À propos"
+    titre={`${entreprise.gerant}, électricien ${zone.libelle}`}
+  />
+
+  <section class="py-14 sm:py-20" aria-labelledby="parcours-titre">
+    <div class="container-page grid gap-12 md:grid-cols-[2fr_3fr] lg:gap-16">
+      <Image
+        src={portrait}
+        alt={`Portrait de ${entreprise.gerant}`}
+        width={600}
+        height={750}
+        sizes="(min-width: 768px) 40vw, 100vw"
+        loading="eager"
+        class="aspect-4/5 w-full max-w-md rounded-xl object-cover"
+      />
+      <div class="prose-content">
+        <h2 id="parcours-titre">Mon parcours</h2>
+        <p>
+          TODO : présenter le parcours du gérant (formation, expériences, installation à son compte). N'indiquer que des
+          informations vérifiées : aucune année d'expérience ni qualification non confirmée.
+        </p>
+        <p>TODO : expliquer en quelques phrases, à la première personne, ce qui motive le gérant dans son métier.</p>
+        <h2>Un artisan local</h2>
+        <p>
+          Électricien à mon compte, j'interviens {zone.libelle} chez les particuliers : installation électrique neuve,
+          rénovation et mise aux normes de tableaux électriques. Vous avez un seul interlocuteur, du premier échange à la
+          fin du chantier.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-line bg-paper-deep py-16 sm:py-20" aria-labelledby="methode-titre">
+    <div class="container-page">
+      <p class="eyebrow">Méthode</p>
+      <h2 id="methode-titre" class="mt-3 text-3xl leading-tight font-bold sm:text-4xl">Comment se déroule un chantier</h2>
+      <ol class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {
+          etapes.map((etape, index) => (
+            <li class="rounded-xl border border-line bg-white p-6">
+              <span
+                class="inline-flex size-10 items-center justify-center rounded-full border-2 border-ink font-bold"
+                aria-hidden="true"
+              >
+                {index + 1}
+              </span>
+              <h3 class="mt-4 text-lg font-bold">{etape.titre}</h3>
+              <p class="mt-2 text-muted">{etape.texte}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="py-16 sm:py-20" aria-labelledby="garanties-titre">
+    <div class="container-page">
+      <p class="eyebrow">Garanties</p>
+      <h2 id="garanties-titre" class="mt-3 text-3xl leading-tight font-bold sm:text-4xl">Assurance et qualifications</h2>
+      <dl class="mt-10 grid gap-6 md:grid-cols-2">
+        <div class="rounded-xl border border-line bg-white p-6 sm:p-8">
+          <dt class="flex items-center gap-3 text-lg font-bold">
+            <Icon name="assurance" class="size-7" />
+            Assurance responsabilité civile décennale
+          </dt>
+          <dd class="mt-3 text-muted">
+            Assureur&nbsp;: {assuranceDecennale.assureur}<br />
+            Zone couverte&nbsp;: {assuranceDecennale.zoneCouverte}
+          </dd>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-6 sm:p-8">
+          <dt class="flex items-center gap-3 text-lg font-bold">
+            <Icon name="norme" class="size-7" />
+            Norme NF C 15-100
+          </dt>
+          <dd class="mt-3 text-muted">
+            Les installations sont réalisées conformément à la norme qui encadre la sécurité des installations électriques
+            des logements.
+          </dd>
+        </div>
+        {
+          certifications.map(({ nom, organisme, url }) => (
+            <div class="rounded-xl border border-line bg-white p-6 sm:p-8">
+              <dt class="flex items-center gap-3 text-lg font-bold">
+                <Icon name="certification" class="size-7" />
+                {nom}
+              </dt>
+              <dd class="mt-3 text-muted">
+                {organisme && <span>Délivrée par {organisme}. </span>}
+                {url && (
+                  <a href={url} class="font-bold text-ink underline" rel="noopener">
+                    Vérifier cette qualification
+                  </a>
+                )}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <CtaBanner />
+</BaseLayout>

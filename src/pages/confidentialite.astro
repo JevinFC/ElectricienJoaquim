@@ -1,0 +1,96 @@
+---
+import PageHeader from '../components/PageHeader.astro';
+import { site } from '../config/site.ts';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const { entreprise, contact, hebergeur, donneesPersonnelles } = site;
+const adresse = `${contact.adresse.rue}, ${contact.adresse.codePostal} ${contact.adresse.ville}`;
+---
+
+<BaseLayout
+  title="Politique de confidentialité"
+  description={`Politique de confidentialité du site ${entreprise.nom} : données du formulaire de contact, durée de conservation et droits RGPD.`}
+>
+  <PageHeader fil={[{ href: '/', label: 'Accueil' }]} eyebrow="Informations légales" titre="Politique de confidentialité" />
+
+  <div class="container-page py-14 sm:py-20">
+    <div class="prose-content">
+      <p><strong>Dernière mise à jour&nbsp;:</strong> {donneesPersonnelles.miseAJour}</p>
+      <p>
+        TODO : faire relire cette politique par le client, et idéalement par un professionnel du droit, avant la mise en
+        ligne.
+      </p>
+      <p>
+        Cette page explique quelles données personnelles sont collectées sur ce site, dans quel but, et comment exercer vos
+        droits, conformément au Règlement général sur la protection des données (RGPD) et à la loi Informatique et
+        Libertés.
+      </p>
+
+      <h2>Responsable du traitement</h2>
+      <p>
+        {entreprise.nom}, représentée par {entreprise.gerant}, {adresse}. Contact&nbsp;:
+        <a href={`mailto:${contact.email}`}>{contact.email}</a> ou
+        <a href={`tel:${contact.telephone.lien}`}>{contact.telephone.affichage}</a>.
+      </p>
+
+      <h2>Données collectées</h2>
+      <p>
+        Des données personnelles ne sont collectées que si vous remplissez le formulaire de contact&nbsp;: nom, numéro de
+        téléphone, adresse e-mail (facultative), commune des travaux, type de travaux et message.
+      </p>
+      <p>
+        Ce site n'utilise ni cookie, ni outil de mesure d'audience, ni traceur publicitaire. Les polices de caractères sont
+        hébergées sur le site lui-même&nbsp;: votre visite ne transmet aucune donnée à un service tiers, en dehors de
+        l'hébergeur (voir plus bas).
+      </p>
+
+      <h2>Finalité et base légale</h2>
+      <p>
+        Ces données servent uniquement à répondre à votre demande&nbsp;: vous rappeler, organiser une visite et établir un
+        devis. Ce traitement répond à votre demande et prépare un éventuel contrat (mesures précontractuelles, article 6.1.b
+        du RGPD). La case à cocher du formulaire recueille votre accord pour être recontacté.
+      </p>
+
+      <h2>Destinataires</h2>
+      <p>
+        Les données sont destinées exclusivement à {entreprise.nom}. Elles ne sont ni vendues ni cédées. Elles transitent
+        par les prestataires techniques suivants, qui agissent en tant que sous-traitants&nbsp;:
+      </p>
+      <ul>
+        <li>envoi du formulaire&nbsp;: {donneesPersonnelles.prestataireFormulaire}&nbsp;;</li>
+        <li>hébergement du site&nbsp;: {hebergeur.nom}, {hebergeur.adresse}.</li>
+      </ul>
+
+      <h2>Transferts hors de l'Union européenne</h2>
+      <p>
+        L'hébergeur et le prestataire d'envoi du formulaire peuvent être établis hors de l'Union européenne, notamment aux
+        États-Unis. TODO : vérifier les garanties encadrant ces transferts (Data Privacy Framework UE–États-Unis ou clauses
+        contractuelles types de la Commission européenne) et les préciser ici.
+      </p>
+
+      <h2>Durée de conservation</h2>
+      <p>
+        Demandes restées sans suite&nbsp;: {donneesPersonnelles.dureeConservation}. Si votre demande aboutit à un contrat, les
+        données nécessaires sont conservées pendant la relation contractuelle, puis pendant les durées imposées par la loi
+        (obligations comptables et fiscales notamment).
+      </p>
+
+      <h2>Vos droits</h2>
+      <p>
+        Vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation et d'opposition au traitement de vos
+        données, ainsi que d'un droit à la portabilité. Vous pouvez retirer votre accord à tout moment. Pour exercer ces
+        droits, écrivez à <a href={`mailto:${contact.email}`}>{contact.email}</a>.
+      </p>
+      <p>
+        Si vous estimez, après avoir contacté l'entreprise, que vos droits ne sont pas respectés, vous pouvez adresser une
+        réclamation à la CNIL&nbsp;: <a href="https://www.cnil.fr/fr/plaintes">www.cnil.fr/fr/plaintes</a>.
+      </p>
+
+      <h2>Sécurité</h2>
+      <p>
+        Le site est servi exclusivement en HTTPS&nbsp;: les informations saisies dans le formulaire sont chiffrées pendant
+        leur transmission.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

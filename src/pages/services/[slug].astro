@@ -1,0 +1,119 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import CtaBanner from '../../components/CtaBanner.astro';
+import Icon from '../../components/Icon.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import RealisationCard from '../../components/RealisationCard.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import { site } from '../../config/site.ts';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getRealisations, getServices } from '../../lib/collections.ts';
+
+export const getStaticPaths = (async () => {
+  const services = await getCollection('services');
+  return services.map((service) => ({ params: { slug: service.id }, props: { service } }));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { service } = Astro.props;
+const { Content } = await render(service);
+const { titre, description, image, imageAlt } = service.data;
+
+const autresServices = (await getServices()).filter((autre) => autre.id !== service.id);
+const realisationsLiees = (await getRealisations()).filter((realisation) => realisation.data.service.id === service.id);
+const { telephone } = site.contact;
+const { zone } = site;
+---
+
+<BaseLayout title={`${titre} ${zone.libelle}`} description={description} image={image} imageAlt={imageAlt}>
+  <PageHeader
+    fil={[
+      { href: '/', label: 'Accueil' },
+      { href: '/services/', label: 'Services' },
+    ]}
+    filCourant={titre}
+    eyebrow="Service"
+    titre={`${titre} ${zone.libelle}`}
+    intro={description}
+  />
+
+  <div class="container-page grid gap-12 py-14 sm:py-20 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16">
+    <div>
+      <Image
+        src={image}
+        alt={imageAlt}
+        width={1200}
+        height={750}
+        sizes="(min-width: 1152px) 736px, (min-width: 1024px) 60vw, 100vw"
+        loading="eager"
+        class="aspect-16/10 w-full rounded-xl object-cover"
+      />
+      <div class="prose-content mt-10">
+        <Content />
+      </div>
+    </div>
+
+    <aside class="lg:sticky lg:top-28 lg:self-start" aria-labelledby="encart-titre">
+      <div class="rounded-xl border border-line bg-white p-6">
+        <h2 id="encart-titre" class="text-xl font-bold">Parlons de votre projet</h2>
+        <p class="mt-2 text-muted">Devis détaillé et gratuit, {zone.libelle}.</p>
+        <div class="mt-6 flex flex-col gap-3">
+          <a href={`tel:${telephone.lien}`} class="btn btn-primary">
+            <Icon name="telephone" class="size-5" />
+            <span>Appeler</span>
+            <span class="font-normal">{telephone.affichage}</span>
+          </a>
+          <a href="/contact/" class="btn btn-secondary">Demander un devis</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  {
+    realisationsLiees.length > 0 && (
+      <section class="border-t border-line py-16 sm:py-20" aria-labelledby="realisations-liees-titre">
+        <div class="container-page">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <h2 id="realisations-liees-titre" class="text-3xl leading-tight font-bold">
+              Chantiers réalisés
+            </h2>
+            <a
+              href={`/realisations/?service=${service.id}`}
+              class="inline-flex items-center gap-2 font-bold underline-offset-4 hover:underline"
+            >
+              Voir toutes les réalisations
+              <Icon name="fleche" class="size-5" />
+            </a>
+          </div>
+          <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {realisationsLiees.slice(0, 3).map((realisation) => (
+              <li>
+                <RealisationCard realisation={realisation} service={titre} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="border-t border-line bg-paper-deep py-16 sm:py-20" aria-labelledby="autres-services-titre">
+    <div class="container-page">
+      <h2 id="autres-services-titre" class="text-3xl leading-tight font-bold">Autres services</h2>
+      <ul class="mt-10 grid gap-6 md:grid-cols-2">
+        {
+          autresServices.map((autre) => (
+            <li>
+              <ServiceCard service={autre} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaBanner />
+</BaseLayout>

@@ -147,6 +147,10 @@
     margin-top: 1em;
   }
 
+  .prose-content > :first-child {
+    margin-top: 0;
+  }
+
   .prose-content h2 {
     @apply mt-10 text-2xl leading-snug font-bold sm:text-3xl;
   }

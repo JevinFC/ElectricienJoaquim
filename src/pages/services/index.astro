@@ -1,0 +1,42 @@
+---
+import CtaBanner from '../../components/CtaBanner.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import TrustSection from '../../components/TrustSection.astro';
+import { site } from '../../config/site.ts';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getServices } from '../../lib/collections.ts';
+
+const services = await getServices();
+const { zone } = site;
+---
+
+<BaseLayout
+  title={`Services d'électricien ${zone.libelle}`}
+  description="Installation électrique neuve, rénovation électrique, remplacement et mise aux normes de tableaux électriques à Tours et en Indre-et-Loire. Devis gratuit."
+>
+  <PageHeader
+    fil={[{ href: '/', label: 'Accueil' }]}
+    filCourant="Services"
+    eyebrow="Services"
+    titre={`Services d'électricité ${zone.libelle}`}
+    intro="De la maison neuve à la mise en sécurité d'un logement ancien, je réalise vos travaux électriques selon la norme NF C 15-100."
+  />
+
+  <section class="py-16 sm:py-20" aria-label="Liste des services">
+    <div class="container-page">
+      <ul class="grid gap-6 md:grid-cols-3">
+        {
+          services.map((service) => (
+            <li>
+              <ServiceCard service={service} headingLevel={2} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <TrustSection />
+  <CtaBanner />
+</BaseLayout>

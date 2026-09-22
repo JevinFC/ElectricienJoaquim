@@ -1,0 +1,25 @@
+---
+import Icon from '../components/Icon.astro';
+import { site } from '../config/site.ts';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const { telephone } = site.contact;
+---
+
+<BaseLayout title="Page introuvable" description="Cette page n'existe pas ou a été déplacée." noindex>
+  <section class="container-page py-20 sm:py-28">
+    <p class="eyebrow">Erreur 404</p>
+    <h1 class="mt-4 text-4xl leading-tight font-bold sm:text-5xl">Page introuvable</h1>
+    <p class="mt-6 max-w-xl text-lg text-muted">
+      La page demandée n'existe pas ou a été déplacée. Retournez à l'accueil, ou appelez-moi directement pour votre projet.
+    </p>
+    <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+      <a href="/" class="btn btn-secondary">Retour à l'accueil</a>
+      <a href={`tel:${telephone.lien}`} class="btn btn-primary">
+        <Icon name="telephone" class="size-5" />
+        <span>Appeler</span>
+        <span class="font-normal">{telephone.affichage}</span>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

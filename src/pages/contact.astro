@@ -1,0 +1,93 @@
+---
+import { PUBLIC_FORM_ACCESS_KEY, PUBLIC_FORM_ENDPOINT } from 'astro:env/client';
+import ContactForm from '../components/ContactForm.tsx';
+import Icon from '../components/Icon.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { site } from '../config/site.ts';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getServices } from '../lib/collections.ts';
+import { formatPlage } from '../lib/format.ts';
+
+const services = await getServices();
+const { entreprise, contact, horaires, zone } = site;
+const travaux = services.map((service) => ({ value: service.id, label: service.data.titre }));
+---
+
+<BaseLayout
+  title="Contact et devis gratuit"
+  description={`Contactez votre électricien ${zone.libelle} : téléphone, e-mail ou formulaire de demande de devis gratuit.`}
+>
+  <PageHeader
+    fil={[{ href: '/', label: 'Accueil' }]}
+    filCourant="Contact"
+    eyebrow="Contact"
+    titre="Contact et demande de devis"
+    intro="Décrivez votre projet : je vous réponds avec un devis détaillé et gratuit. Pour aller plus vite, appelez-moi."
+  />
+
+  <div class="container-page grid gap-12 py-14 sm:py-20 lg:grid-cols-[20rem_minmax(0,1fr)] lg:gap-16">
+    <aside aria-labelledby="coordonnees-titre">
+      <h2 id="coordonnees-titre" class="text-2xl font-bold">Coordonnées</h2>
+      <dl class="mt-6 space-y-6">
+        <div>
+          <dt class="text-sm font-bold tracking-wide text-muted uppercase">Téléphone</dt>
+          <dd class="mt-1">
+            <a href={`tel:${contact.telephone.lien}`} class="inline-flex items-center gap-2 text-2xl font-bold hover:underline">
+              <Icon name="telephone" class="size-6 shrink-0" />
+              {contact.telephone.affichage}
+            </a>
+          </dd>
+        </div>
+        <div>
+          <dt class="text-sm font-bold tracking-wide text-muted uppercase">E-mail</dt>
+          <dd class="mt-1">
+            <a href={`mailto:${contact.email}`} class="inline-flex items-center gap-2 font-bold break-all hover:underline">
+              <Icon name="email" class="size-5 shrink-0" />
+              {contact.email}
+            </a>
+          </dd>
+        </div>
+        <div>
+          <dt class="text-sm font-bold tracking-wide text-muted uppercase">Adresse</dt>
+          <dd class="mt-1">
+            {contact.adresse.rue}<br />
+            {contact.adresse.codePostal}
+            {contact.adresse.ville}
+          </dd>
+        </div>
+        <div>
+          <dt class="text-sm font-bold tracking-wide text-muted uppercase">Horaires</dt>
+          <dd class="mt-1">
+            <ul class="space-y-1">
+              {horaires.plages.map((plage) => <li>{formatPlage(plage)}</li>)}
+              {horaires.note && <li>{horaires.note}</li>}
+            </ul>
+          </dd>
+        </div>
+        <div>
+          <dt class="text-sm font-bold tracking-wide text-muted uppercase">Zone d'intervention</dt>
+          <dd class="mt-1">
+            Tout le département ({zone.departement}, {zone.numeroDepartement}).
+          </dd>
+        </div>
+      </dl>
+    </aside>
+
+    <section aria-labelledby="formulaire-titre">
+      <h2 id="formulaire-titre" class="text-2xl font-bold">Demande de devis</h2>
+      <div class="mt-6 rounded-xl border border-line bg-white p-6 sm:p-8">
+        <ContactForm
+          client:visible
+          endpoint={PUBLIC_FORM_ENDPOINT || undefined}
+          accessKey={PUBLIC_FORM_ACCESS_KEY || undefined}
+          travaux={travaux}
+          communes={zone.communes}
+          telephone={contact.telephone}
+          email={contact.email}
+          entreprise={entreprise.nom}
+          confidentialite="/confidentialite/"
+        />
+      </div>
+    </section>
+  </div>
+</BaseLayout>
