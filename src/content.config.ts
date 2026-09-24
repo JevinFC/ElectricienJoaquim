@@ -16,9 +16,17 @@ const services = defineCollection({
       description: z.string().max(160),
       // Phrase courte, sans nom de ville, affichée sur les cartes et en introduction de la page.
       resume: z.string().max(140),
-      // Libellé court de l'étiquette de repérage (« Rénovation »), après le repère C1, C2…
+      // Situation du client en une phrase courte : titre des cartes de l'accueil (« Vous rénovez une maison ancienne »).
+      accroche: z.string().max(60),
+      // Nom du service avec son article, en minuscules, pour les liens explicites : « Tout sur la rénovation électrique ».
+      designation: z.string().max(60),
+      // 3 ou 4 situations concrètes qui relèvent du service : liste « C'est pour vous si… » de la page Services.
+      pourVousSi: z.array(z.string()).min(3).max(4),
+      // 3 ou 4 prestations comprises : « Ce qui est compris » sur la page Services.
+      inclus: z.array(z.string()).min(3).max(4),
+      // Libellé court du service, affiché après un losange cuivre (« Rénovation »).
       etiquette: z.string().max(24),
-      // Ordre d'affichage croissant ; donne aussi le repère de l'étiquette (1 → C1).
+      // Ordre d'affichage croissant.
       ordre: z.number().int().positive(),
       // Photo facultative : sans elle, un emplacement réservé affiche `imageAlt`.
       image: image().optional(),

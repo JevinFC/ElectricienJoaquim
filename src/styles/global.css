@@ -27,13 +27,9 @@
   --color-sable: #c9c4b8;
   --color-bordure: #cfc7b8;
 
-  /*
-   * Textes (400) et boutons ou libellés (600) : Public Sans. Titres et logotype (700) : Bitter.
-   * Étiquettes de repérage (500) : IBM Plex Mono.
-   */
+  /* Textes (400) et boutons ou libellés (600) : Public Sans. Titres et logotype (700) : Bitter. */
   --font-sans: 'Public Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
   --font-titre: 'Bitter', ui-serif, Georgia, 'Times New Roman', serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
 
   /*
    * Deux arrondis seulement : rounded-conteneur (cartes, photos, encarts) et
@@ -129,29 +125,42 @@
     @apply bg-cuivre-clair;
   }
 
-  /*
-   * Signature : étiquette de repérage, comme celles collées sous les disjoncteurs d'un
-   * tableau électrique. Un repère sur fond plein (C1, C2, 37, Avant…), puis un libellé
-   * facultatif. Au plus une étiquette, ou une série cohérente, par section.
-   */
+  /* Signature : petit losange cuivre, devant les libellés discrets et dans les listes. */
+  .losange {
+    @apply inline-block size-2 shrink-0 rotate-45 bg-cuivre;
+  }
+
+  .surface-dark .losange {
+    @apply bg-cuivre-clair;
+  }
+
+  /* Libellé discret : losange cuivre suivi d'un texte en Public Sans, en casse normale. */
   .etiquette {
-    @apply inline-flex items-stretch overflow-hidden rounded-controle border border-ardoise bg-tuffeau-clair font-mono text-[0.8125rem] leading-none font-medium tracking-wide text-ardoise uppercase;
-  }
-
-  .etiquette > * {
-    @apply px-2 py-1.5;
-  }
-
-  .etiquette-repere {
-    @apply bg-ardoise text-tuffeau;
+    @apply inline-flex items-center gap-2.5 text-sm font-semibold text-gris-ardoise;
   }
 
   .surface-dark .etiquette {
-    @apply border-sable bg-ardoise text-tuffeau;
+    @apply text-sable;
   }
 
-  .surface-dark .etiquette-repere {
-    @apply bg-tuffeau text-ardoise;
+  /* Libellé posé sur une photo : fond clair pour rester lisible, quel que soit le fond de la page. */
+  .etiquette-photo,
+  .surface-dark .etiquette-photo {
+    @apply rounded-controle border border-bordure bg-tuffeau-clair px-2.5 py-1.5 text-ardoise;
+  }
+
+  .surface-dark .etiquette-photo .losange {
+    @apply bg-cuivre;
+  }
+
+  /* Listes à puces en losange, hors texte long (page Services). */
+  .liste-losanges > li {
+    @apply relative pl-6;
+  }
+
+  .liste-losanges > li::before {
+    content: '';
+    @apply absolute top-[0.6em] left-1 size-2 rotate-45 bg-cuivre;
   }
 
   /* Emplacement d'une photo pas encore fournie : sa description sert de consigne de prise de vue. */
@@ -221,7 +230,7 @@
     @apply list-decimal pl-6 marker:font-semibold marker:text-cuivre;
   }
 
-  /* Seul usage restant du losange : les puces des listes de texte. */
+  /* Puces en losange des listes de texte. */
   .prose-content ul > li {
     @apply relative pl-6;
   }

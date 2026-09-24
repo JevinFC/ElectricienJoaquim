@@ -11,13 +11,17 @@ interface Props {
   width: number;
   height: number;
   sizes: string;
+  /** Largeurs générées pour le srcset (par défaut, calculées par Astro à partir de `width`). */
+  widths?: number[];
   /** Photo principale de la page (hero, en-tête) : chargée en priorité. */
   priority?: boolean;
+  /** Chargement différé par défaut ; 'eager' pour une photo visible dès l'arrivée sans être prioritaire. */
+  loading?: 'eager' | 'lazy';
   /** Classes communes à la photo et à l'emplacement réservé : proportions, arrondi… */
   class?: string;
 }
 
-const { src, alt, width, height, sizes, priority = false, class: className } = Astro.props;
+const { src, alt, width, height, sizes, widths, priority = false, loading, class: className } = Astro.props;
 ---
 
 {
@@ -28,7 +32,9 @@ const { src, alt, width, height, sizes, priority = false, class: className } = A
       width={width}
       height={height}
       sizes={sizes}
+      widths={widths}
       priority={priority}
+      loading={loading}
       class:list={['object-cover', className]}
     />
   ) : (

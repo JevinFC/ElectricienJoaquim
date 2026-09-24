@@ -7,6 +7,19 @@ import sitemap from '@astrojs/sitemap';
 
 import { site } from './src/config/site.ts';
 
+// `astro check` et `astro build` pré-bundlent React en mode production dans le cache de Vite.
+// Un cache séparé évite qu'ils écrasent celui d'un serveur de développement lancé en parallèle
+// (les îles React disparaissaient alors : « _jsxDEV is not a function »).
+/** @type {import('astro').AstroIntegration} */
+const cacheViteSepare = {
+  name: 'cache-vite-separe',
+  hooks: {
+    'astro:config:setup': ({ command, updateConfig }) => {
+      if (command !== 'dev') updateConfig({ vite: { cacheDir: 'node_modules/.vite-build' } });
+    },
+  },
+};
+
 // https://astro.build/config
 export default defineConfig({
   // URL publique, lue depuis la configuration centralisée (sitemap, URL canoniques, robots.txt).
@@ -22,7 +35,7 @@ export default defineConfig({
     inlineStylesheets: 'always',
   },
 
-  integrations: [react(), sitemap()],
+  integrations: [react(), sitemap(), cacheViteSepare],
 
   image: {
     // Génère automatiquement srcset et sizes pour chaque <Image />. Les styles responsives

@@ -5,7 +5,7 @@ Site vitrine statique d'un artisan électricien : installation électrique neuve
 - **Astro 7** en sortie 100 % statique, **TypeScript strict**.
 - **Tailwind CSS 4**.
 - **React 19** uniquement pour deux îles : la galerie des réalisations et le formulaire de contact.
-- Polices **Bitter** (titres et logotype), **Public Sans** (textes) et **IBM Plex Mono** (étiquettes de repérage), auto-hébergées via Fontsource : aucune requête vers Google Fonts.
+- Polices **Bitter** (titres et logotype), **Public Sans** (textes et libellés), auto-hébergées via Fontsource : aucune requête vers Google Fonts.
 - Palette « Tuffeau & Cuivre » : ardoise, tuffeau et cuivre (détail dans `src/styles/global.css`).
 - Déploiement prévu sur **Vercel**.
 
@@ -172,7 +172,7 @@ La réalisation apparaît automatiquement :
 - dans la galerie `/realisations/`, avec un filtre par service ;
 - sur la page du service lié.
 
-Chaque carte porte l'étiquette de repérage de son service (« C2 · Rénovation »). Tant qu'aucun chantier n'est publié, l'accueil n'affiche que l'avant/après, et la galerie un court message. Le build affiche alors l'avertissement « The collection "realisations" does not exist or is empty » : il disparaît au premier chantier ajouté.
+Chaque carte porte le libellé de son service (« ◆ Rénovation »). Tant qu'aucun chantier n'est publié, l'accueil n'affiche que l'avant/après, et la galerie un court message. Le build affiche alors l'avertissement « The collection "realisations" does not exist or is empty » : il disparaît au premier chantier ajouté.
 
 ## 5. Ajouter un service
 
@@ -184,8 +184,12 @@ Chaque carte porte l'étiquette de repérage de son service (« C2 · Rénovatio
 | `titre` | Nom du service, par exemple « Borne de recharge ». |
 | `description` | Meta description pour les moteurs de recherche, **160 caractères maximum**. Elle n'est plus affichée sur les cartes. |
 | `resume` | Phrase courte, **140 caractères maximum** et **sans nom de ville**, dans les mots du client : affichée sur les cartes et en introduction de la page du service. |
-| `etiquette` | Libellé court de l'étiquette de repérage (24 caractères maximum), par exemple « Borne ». |
-| `ordre` | Position dans les listes (ordre croissant). Donne aussi le repère de l'étiquette : `ordre: 4` → « C4 ». |
+| `etiquette` | Libellé court du service (24 caractères maximum), affiché après un petit losange cuivre, par exemple « Borne ». |
+| `accroche` | Situation du client en une phrase courte (60 caractères maximum) : titre de la carte sur l'accueil, par exemple « Vous rénovez une maison ancienne ». |
+| `designation` | Nom du service avec son article, en minuscules, pour les liens explicites : « la rénovation électrique » donne « Tout sur la rénovation électrique ». |
+| `pourVousSi` | 3 ou 4 situations concrètes : liste « C'est pour vous si… » de la page Services. |
+| `inclus` | 3 ou 4 prestations comprises : liste « Ce qui est compris » de la page Services. À valider avec le client. |
+| `ordre` | Position dans les listes (ordre croissant). |
 | `image` | Facultatif : photo illustrant le service, chemin relatif au fichier (par exemple `../../assets/services/borne.jpg`). Sans photo, un emplacement réservé affiche `imageAlt`. |
 | `imageAlt` | Description de la photo (ou de la photo attendue, tant qu'elle manque). |
 
@@ -197,7 +201,7 @@ Chaque carte porte l'étiquette de repérage de son service (« C2 · Rénovatio
 
 La page du service, les cartes, la liste du formulaire de contact et les filtres de la galerie se mettent à jour automatiquement.
 
-Les services n'ont pas d'icône : leurs cartes portent une photo et une étiquette de repérage. Pour une nouvelle icône d'interface, ajouter une entrée dans `src/components/icons.ts` : un tracé SVG sur une grille de 24 × 24, au trait. Pas d'éclair ni d'ampoule : c'est un parti pris de la direction artistique.
+Les services n'ont pas d'icône : leurs cartes portent un libellé précédé d'un losange cuivre. Pour une nouvelle icône d'interface, ajouter une entrée dans `src/components/icons.ts` : un tracé SVG sur une grille de 24 × 24, au trait. Pas d'éclair ni d'ampoule : c'est un parti pris de la direction artistique.
 
 Typographie : en français, une espace insécable précède `: ; ? !`. Dans les fichiers Markdown, utiliser le caractère U+00A0 ou `&nbsp;`. Dans les fichiers `.astro`, utiliser `&nbsp;`.
 
@@ -208,7 +212,7 @@ Tant qu'une photo manque, le composant `Photo` (`src/components/Photo.astro`) af
 | Photo | Où la déclarer |
 |---|---|
 | Hero de l'accueil, portrait (bandeau « Qui suis-je » et `/a-propos/`), avant/après d'un tableau | [`src/config/photos.ts`](src/config/photos.ts) : placer le JPG dans `src/assets/photos/`, l'importer en haut du fichier et le passer à `src` (marche à suivre en tête du fichier). |
-| Photo d'un service | Champ `image` du fichier du service (voir la section 5). |
+| Photo d'un service | Champ `image` du fichier du service (voir la section 5). Sur la page Services, elle occupe toute une moitié d'écran, à bord perdu : prévoir au moins 1920 px de large et garder le sujet au centre, car le cadrage s'adapte à la hauteur du texte. |
 | Photos des chantiers | Fichiers de `src/content/realisations/` (voir la section 4). |
 | Image de partage (réseaux sociaux) | `src/assets/og-default.png`, à remplacer par une image de 1200 × 630 px. Pour un autre nom de fichier, modifier l'import dans `src/layouts/BaseLayout.astro`. |
 | Favicon | `public/favicon.svg`. |
@@ -278,7 +282,7 @@ Aucun adaptateur n'est nécessaire : le site est entièrement statique.
 
 - Aucun JavaScript en dehors de deux scripts en ligne (menu mobile, environ 1 ko ; barre d'appel mobile, quelques lignes) et des deux îles React : galerie (`client:visible`) et formulaire (`client:visible`).
 - CSS intégré à chaque page (environ 6 ko compressé).
-- Polices préchargées : sous-ensemble latin, Bitter 700, Public Sans 400 et 600, IBM Plex Mono 500.
+- Polices préchargées : sous-ensemble latin, Bitter 700, Public Sans 400 et 600.
 - Images optimisées par Astro, avec `srcset` et `sizes`.
 
 **Accessibilité (WCAG AA)**
@@ -310,6 +314,7 @@ Aucun adaptateur n'est nécessaire : le site est entièrement statique.
 
 - **TypeScript 6** : `@astrojs/check` n'accepte que TypeScript 5 ou 6. Ne pas passer à TypeScript 7 tant que ce n'est pas le cas.
 - **Collections** : configuration dans `src/content.config.ts`, loader `glob`. `z` s'importe depuis `astro/zod` (Zod 4).
+- **Cache Vite séparé** : `astro check` et `astro build` utilisent `node_modules/.vite-build/`, le serveur de développement `node_modules/.vite/` (intégration `cacheViteSepare` dans `astro.config.mjs`). Sans cette séparation, un build lancé pendant `npm run dev` remplaçait React par sa version de production dans le cache du serveur, et les îles React (formulaire de contact, galerie) disparaissaient aussitôt affichées (« _jsxDEV is not a function » dans la console). Si cela se reproduit : `npx astro dev --force`, ou supprimer `node_modules/.vite/` puis relancer `npm run dev`.
 - **`compressHTML: true`** : la valeur par défaut d'Astro 7 (`'jsx'`) supprime les espaces entre un texte et un lien écrits sur deux lignes. Le comportement HTML classique est plus sûr pour les pages de texte.
 - **Images** :
   - ne jamais imposer `format` à `<Image />` ou `getImage()` sur une image de contenu : un SVG ferait échouer le build, alors que le format par défaut convient (SVG conservé, JPG et PNG convertis en WebP) ;
@@ -318,9 +323,10 @@ Aucun adaptateur n'est nécessaire : le site est entièrement statique.
 - **Tailwind 4** : jetons définis dans `@theme` (`src/styles/global.css`).
   - La palette par défaut est désactivée : seules les couleurs du site existent (`ardoise`, `ardoise-clair`, `tuffeau`, `tuffeau-clair`, `cuivre`, `cuivre-fonce`, `cuivre-clair`, `gris-ardoise`, `sable`, `bordure`).
   - Deux arrondis seulement : `rounded-conteneur` (cartes, photos, encarts) et `rounded-controle` (boutons, champs, filtres, étiquettes). Les autres (`rounded-lg`…) n'existent plus.
-  - Signature graphique : l'**étiquette de repérage** (`src/components/Etiquette.astro`, classes `etiquette` et `etiquette-repere`), inspirée des étiquettes d'un tableau électrique : repère des services (C1, C2, C3, tiré du champ `ordre`), département dans le hero, avant/après. Au plus une étiquette, ou une série cohérente, par section.
+  - Signature graphique : le **libellé à losange** (`src/components/Etiquette.astro`, classes `etiquette`, `etiquette-photo` et `losange`), en Public Sans et en casse normale.
   - Le filet cuivre (`filet`) est réservé au H1 ; le losange ne sert plus qu'aux puces des listes de texte (`prose-content`).
   - Mise en page de l'accueil : une seule grille de trois éléments (les services), une rupture pleine largeur au milieu (bande ardoise portée par la photo), pas d'alternance de fonds tuffeau / tuffeau-clair.
+  - Photo à bord perdu et texte (`src/components/SplitMedia.astro`) : bandeau « Qui suis-je » de l'accueil et blocs de la page Services. À partir de `lg`, la photo occupe une moitié de l'écran sur toute la hauteur du bloc, et le texte reste aligné sur le conteneur.
 - **Compilateur Rust** : le HTML doit être valide (balises fermées, pas de bloc dans un `<p>`).
 
 ## 11. TODO à compléter avec le client

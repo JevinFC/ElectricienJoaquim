@@ -3,7 +3,6 @@ import type { CollectionEntry } from 'astro:content';
 import Etiquette from './Etiquette.astro';
 import Icon from './Icon.astro';
 import Photo from './Photo.astro';
-import { repereService } from '../lib/collections.ts';
 
 interface Props {
   service: CollectionEntry<'services'>;
@@ -28,7 +27,7 @@ const { titre, resume, etiquette, image, imageAlt } = service.data;
       sizes="(min-width: 768px) 50vw, 100vw"
       class="aspect-4/3 w-full"
     />
-    <Etiquette repere={repereService(service)} texte={etiquette} class="absolute top-3 left-3" />
+    <Etiquette texte={etiquette} surPhoto class="absolute top-3 left-3" />
   </div>
   <div class="flex flex-1 flex-col p-6">
     <Titre class="text-xl leading-snug font-bold">

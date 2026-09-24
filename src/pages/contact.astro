@@ -3,7 +3,7 @@ import { PUBLIC_FORM_ACCESS_KEY, PUBLIC_FORM_ENDPOINT } from 'astro:env/client';
 import ContactForm from '../components/ContactForm.tsx';
 import Icon from '../components/Icon.astro';
 import PageHeader from '../components/PageHeader.astro';
-import { site } from '../config/site.ts';
+import { promesse, site } from '../config/site.ts';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getServices } from '../lib/collections.ts';
 import { formatPlage } from '../lib/format.ts';
@@ -14,14 +14,14 @@ const travaux = services.map((service) => ({ value: service.id, label: service.d
 ---
 
 <BaseLayout
-  title="Contact et devis gratuit"
-  description={`Contactez votre électricien ${zone.libelle} : téléphone, e-mail ou formulaire de demande de devis gratuit.`}
+  title="Contact et demande de devis"
+  description={`Contactez votre électricien ${zone.libelle} : téléphone, e-mail ou formulaire de demande de devis. ${promesse('devis').libelle}.`}
 >
   <PageHeader
     fil={[{ href: '/', label: 'Accueil' }]}
     filCourant="Contact"
     titre="Contact et demande de devis"
-    intro={`Décrivez votre projet : je vous rappelle sous ${delaiRappel}, puis je vous remets un devis détaillé et gratuit. Pour aller plus vite, appelez-moi.`}
+    intro={`Décrivez votre projet. ${promesse('rappel').phrase} ${promesse('devis').phrase} Pour aller plus vite, appelez-moi.`}
   />
 
   <div class="container-page grid gap-12 py-14 sm:py-20 lg:grid-cols-[20rem_minmax(0,1fr)] lg:gap-16">

@@ -31,8 +31,3 @@ export function serviceParId(services: CollectionEntry<'services'>[], id: string
   if (!service) throw new Error(`Le service « ${id} » n'existe pas dans src/content/services/.`);
   return service;
 }
-
-/** Repère d'un service sur les étiquettes, comme un numéro de circuit : ordre 2 → « C2 ». */
-export function repereService(service: CollectionEntry<'services'>): string {
-  return `C${service.data.ordre}`;
-}

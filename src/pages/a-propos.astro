@@ -4,29 +4,11 @@ import PageHeader from '../components/PageHeader.astro';
 import Photo from '../components/Photo.astro';
 import { photos } from '../config/photos.ts';
 import { site } from '../config/site.ts';
+import { etapesIntervention } from '../lib/intervention.ts';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const { entreprise, contact, parcours, delaiRappel, assuranceDecennale, certifications, zone } = site;
 
-// TODO : étapes à valider avec le client (elles décrivent sa façon de travailler).
-const etapes = [
-  {
-    titre: 'Premier échange',
-    texte: `Vous m'expliquez votre projet par téléphone ou via le formulaire de contact : je vous rappelle sous ${delaiRappel}.`,
-  },
-  {
-    titre: 'Visite et devis',
-    texte: 'Je viens voir le chantier ou l’installation existante, puis je vous remets un devis détaillé et gratuit.',
-  },
-  {
-    titre: 'Réalisation',
-    texte: 'Les travaux sont réalisés selon la norme NF C 15-100, aux dates convenues ensemble.',
-  },
-  {
-    titre: 'Mise en service',
-    texte: 'Je vous présente votre installation et votre tableau électrique avant de quitter le chantier.',
-  },
-];
 ---
 
 <BaseLayout
@@ -76,7 +58,7 @@ const etapes = [
       <div class="prose-content mt-8">
         <ol>
           {
-            etapes.map(({ titre, texte }) => (
+            etapesIntervention.map(({ titre, texte }) => (
               <li>
                 <strong>{titre}.</strong> {texte}
               </li>

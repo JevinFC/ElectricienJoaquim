@@ -9,8 +9,8 @@ interface Lien {
 
 interface Props {
   titre: string;
-  /** Étiquette de repérage au-dessus du titre (pages des services, 404). */
-  etiquette?: { repere: string; texte?: string };
+  /** Libellé discret au-dessus du titre (pages des services, 404). */
+  etiquette?: string;
   intro?: string;
   /** Fil d'Ariane : pages parentes. La page courante est ajoutée à la fin. */
   fil?: Lien[];
@@ -19,18 +19,30 @@ interface Props {
 }
 
 const { titre, etiquette, intro, fil, filCourant = titre } = Astro.props;
+// Colonne de droite facultative (slot « aside ») : sommaire de la page Services, par exemple.
+const aAside = Astro.slots.has('aside');
 ---
 
 <!-- En-tête des pages intérieures : bloc ardoise continu avec l'en-tête, filet cuivre de 3 px en bas. -->
 <section class="surface-dark border-b-[3px] border-cuivre bg-ardoise text-tuffeau">
-  <div class="container-page pt-10 pb-12 sm:pt-16 sm:pb-20">
+  <div
+    class:list={[
+      'container-page pt-10 pb-12 sm:pt-16 sm:pb-20',
+      aAside && 'grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end lg:gap-16',
+    ]}
+  >
+    <div>
     {
       fil && (
         <nav aria-label="Fil d'Ariane" class="mb-8 text-sm">
-          <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sable">
+          <ol class="flex flex-wrap items-center gap-x-2 gap-y-3 text-sable">
             {fil.map(({ href, label }) => (
               <li class="flex items-center gap-2">
-                <a href={href} class="underline-offset-4 hover:text-tuffeau hover:underline">
+                {/* Zone tactile de 44 px, sans agrandir la ligne : les marges négatives compensent la hauteur. */}
+                <a
+                  href={href}
+                  class="-my-3 inline-flex min-h-11 items-center underline-offset-4 hover:text-tuffeau hover:underline"
+                >
                   {label}
                 </a>
                 <Icon name="chevron" class="size-4" />
@@ -46,12 +58,14 @@ const { titre, etiquette, intro, fil, filCourant = titre } = Astro.props;
     {
       etiquette && (
         <div class="mb-6">
-          <Etiquette {...etiquette} />
+          <Etiquette texte={etiquette} />
         </div>
       )
     }
     <h1 class="filet max-w-3xl text-4xl leading-[1.1] font-bold sm:text-5xl">{titre}</h1>
     {intro && <p class="mt-6 max-w-2xl text-lg text-sable sm:text-xl">{intro}</p>}
     <slot />
+    </div>
+    {aAside && <div><slot name="aside" /></div>}
   </div>
 </section>

@@ -59,3 +59,8 @@ export function formatPlage(plage: PlageHoraire): string {
 export function joursSchema(jours: Jour[]): string[] {
   return jours.map((jour) => JOURS_SCHEMA[jour]);
 }
+
+/** Vrai si le texte contient encore un emplacement réservé entre crochets (« [à compléter] »). */
+export function contientEmplacement(texte: string): boolean {
+  return /\[[^\]]+\]/.test(texte);
+}

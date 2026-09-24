@@ -1,10 +1,10 @@
 ---
 import Icon from './Icon.astro';
 import Logotype from './Logotype.astro';
-import { site } from '../config/site.ts';
+import { promesse, site } from '../config/site.ts';
 import { formatPlage } from '../lib/format.ts';
 
-const { entreprise, contact, horaires, zone, delaiRappel } = site;
+const { entreprise, contact, horaires, zone } = site;
 const annee = new Date().getFullYear();
 
 const liens = [
@@ -21,8 +21,7 @@ const liens = [
     <div>
       <Logotype />
       <p class="mt-4 max-w-xs text-sable">
-        Électricien {zone.libelle}&nbsp;: installation neuve, rénovation et tableaux électriques. Rappel sous {delaiRappel}, devis
-        gratuit.
+        Électricien {zone.libelle}&nbsp;: installation neuve, rénovation et tableaux électriques. {promesse('rappel').libelle}, {promesse('devis').libelle.toLowerCase()}.
       </p>
     </div>
 

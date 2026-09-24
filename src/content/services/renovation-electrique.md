@@ -4,6 +4,19 @@ description: "Rénovation et mise en sécurité de l'installation électrique de
 resume: "Tableau à fusibles, prises sans terre, disjonctions à répétition : je remets votre installation en sécurité."
 etiquette: Rénovation
 ordre: 2
+accroche: "Vous rénovez une maison ancienne"
+designation: "la rénovation électrique"
+pourVousSi:
+  - "Vous achetez ou rénovez une maison ou un appartement ancien"
+  - "Vos prises n'ont pas de terre, ou vos fils sont gainés de tissu"
+  - "Vous manquez de prises et les multiprises s'accumulent"
+  - "Vous voulez remettre l'installation en sécurité avant de louer ou de vendre"
+# TODO: à valider avec le client
+inclus:
+  - "État des lieux de l'installation existante, avec vous"
+  - "Remplacement des câbles et des appareillages vétustes"
+  - "Mise à la terre et protections différentielles"
+  - "Mise en sécurité ou rénovation complète selon la norme NF C 15-100"
 # TODO : photo à prendre. Placer le JPG dans src/assets/services/, ajouter la ligne
 # image: ../../assets/services/renovation.jpg, puis adapter imageAlt à la photo réelle.
 imageAlt: Rénovation de l'installation électrique d'une maison ancienne
@@ -28,4 +41,4 @@ Maison de ville, longère en tuffeau, appartement ancien : chaque bâtiment a s
 - Un tableau électrique clair, avec des circuits repérés.
 - Une installation prête à accueillir vos futurs équipements.
 
-J'interviens à Tours et dans toute l'Indre-et-Loire. Décrivez-moi votre projet : je vous rappelle sous 24 h, et le devis est gratuit et détaillé.
+J'interviens à Tours et dans toute l'Indre-et-Loire. Décrivez-moi votre projet.

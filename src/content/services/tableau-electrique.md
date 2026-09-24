@@ -2,8 +2,21 @@
 titre: Tableau électrique et mise aux normes
 description: "Remplacement et mise aux normes NF C 15-100 de votre tableau électrique à Tours et en Indre-et-Loire : protections adaptées et circuits repérés."
 resume: "Tableau ancien, saturé ou qui disjoncte sans raison : je le remplace par un tableau aux normes, aux circuits repérés."
-etiquette: Tableau
+etiquette: Tableau électrique
 ordre: 3
+accroche: "Votre tableau vous inquiète"
+designation: "le tableau électrique et la mise aux normes"
+pourVousSi:
+  - "Ça disjoncte souvent, ou sans raison apparente"
+  - "Votre tableau a encore des fusibles"
+  - "Vous n'avez pas d'interrupteur différentiel 30 mA"
+  - "Le tableau est plein et ne peut plus accueillir de nouveau circuit"
+# TODO: à valider avec le client
+inclus:
+  - "Remplacement par un tableau conforme à la norme NF C 15-100"
+  - "Interrupteurs différentiels 30 mA et disjoncteurs adaptés à chaque circuit"
+  - "Repérage clair de chaque circuit"
+  - "Vérification de la liaison à la terre"
 # TODO : photo à prendre. Placer le JPG dans src/assets/services/, ajouter la ligne
 # image: ../../assets/services/tableau.jpg, puis adapter imageAlt à la photo réelle.
 imageAlt: Tableau électrique neuf avec ses disjoncteurs repérés
@@ -25,4 +38,4 @@ Avant les travaux, je vous explique ce qui sera remplacé et pourquoi, devis dé
 
 ## À Tours et dans toute l'Indre-et-Loire
 
-Tableau vétuste, saturé ou inadapté à vos nouveaux besoins : je vous conseille sur la solution la plus adaptée, partout en Indre-et-Loire. Demandez votre devis gratuit : je vous rappelle sous 24 h.
+Tableau vétuste, saturé ou inadapté à vos nouveaux besoins : je vous conseille sur la solution la plus adaptée, partout en Indre-et-Loire. Décrivez-moi votre situation.

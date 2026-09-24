@@ -1,17 +1,17 @@
 ---
 interface Props {
-  /** Repère sur fond plein, comme le numéro d'un circuit : « C2 », « 37 », « Avant »… */
-  repere: string;
-  /** Libellé facultatif, affiché après le repère. */
-  texte?: string | undefined;
+  /** Libellé en casse normale, précédé d'un petit losange cuivre. */
+  texte: string;
+  /** Posée sur une photo : fond tuffeau-clair pour rester lisible. */
+  surPhoto?: boolean;
   class?: string;
 }
 
-const { repere, texte, class: className } = Astro.props;
+const { texte, surPhoto = false, class: className } = Astro.props;
 ---
 
-<!-- Signature graphique : étiquette de repérage, comme celles d'un tableau électrique (styles dans global.css). -->
-<span class:list={['etiquette', className]}>
-  <span class="etiquette-repere">{repere}</span>
-  {texte && <span>{texte}</span>}
+<!-- Libellé discret : petit losange cuivre suivi d'un texte en Public Sans (styles dans global.css). -->
+<span class:list={['etiquette', surPhoto && 'etiquette-photo', className]}>
+  <span class="losange" aria-hidden="true"></span>
+  <span>{texte}</span>
 </span>

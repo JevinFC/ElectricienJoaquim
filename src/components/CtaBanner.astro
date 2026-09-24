@@ -1,16 +1,16 @@
 ---
 import Icon from './Icon.astro';
-import { site } from '../config/site.ts';
+import { promesse, site } from '../config/site.ts';
 
 interface Props {
   titre?: string;
   texte?: string;
 }
 
-const { contact, delaiRappel } = site;
+const { contact } = site;
 const {
   titre = 'Décrivez-moi votre projet',
-  texte = `Je vous rappelle sous ${delaiRappel} pour en parler. Le devis est gratuit et détaillé.`,
+  texte = `${promesse('rappel').phrase} ${promesse('devis').phrase}`,
 } = Astro.props;
 const { telephone } = contact;
 ---

@@ -7,7 +7,7 @@ import Gallery, { type GalleryImage, type GalleryItem } from '../components/Gall
 import PageHeader from '../components/PageHeader.astro';
 import { site } from '../config/site.ts';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getRealisations, getServices, repereService, serviceParId } from '../lib/collections.ts';
+import { getRealisations, getServices, serviceParId } from '../lib/collections.ts';
 import { formatDateIso, formatMoisAnnee } from '../lib/format.ts';
 
 const [services, realisations] = await Promise.all([getServices(), getRealisations()]);
@@ -48,7 +48,6 @@ const items: GalleryItem[] = await Promise.all(
       date: formatDateIso(date),
       dateLabel: formatMoisAnnee(date),
       serviceId: service.id,
-      serviceRepere: repereService(serviceLie),
       serviceEtiquette: serviceLie.data.etiquette,
       // Vignette recadrée en 4:3 pour la grille.
       couverture: await optimiser(couverture.src, couverture.alt, [400, 640, 960], 4 / 3),

@@ -1,0 +1,64 @@
+---
+import type { ImageMetadata } from 'astro';
+import Photo from './Photo.astro';
+
+interface Props {
+  /** Photo optimisée par Astro. Sans elle, un emplacement réservé affiche le texte `alt`. */
+  src?: ImageMetadata | undefined;
+  /** Description de la photo : texte alternatif, ou consigne affichée dans l'emplacement réservé. */
+  alt: string;
+  /** Côté de la photo à partir de lg (1024 px). En dessous, la photo est toujours au-dessus du texte. */
+  cote?: 'gauche' | 'droite';
+  /** Chargement différé par défaut ; 'eager' pour une photo visible dès l'arrivée sur la page. */
+  loading?: 'eager' | 'lazy';
+  /** Espace entre la photo et le texte à partir de lg : 4rem, ou 3rem jusqu'à xl avec 'resserre' (texte plus large). */
+  espacement?: 'normal' | 'resserre';
+  /** Zone photo : proportions sous lg et hauteur minimale à partir de lg (« aspect-4/3 lg:min-h-[32.5rem] »). */
+  classePhoto: string;
+  /** Bloc de texte : espacements verticaux. */
+  class?: string;
+}
+
+const { src, alt, cote = 'gauche', loading, espacement = 'normal', classePhoto, class: className } = Astro.props;
+
+// Photo générée sans recadrage : sa zone change de proportions avec la hauteur du texte,
+// c'est object-fit: cover qui la cadre à l'affichage.
+const largeur = Math.min(src?.width ?? 1920, 1920);
+const hauteur = src ? Math.round((largeur * src.height) / src.width) : 1440;
+
+// Côté écran, le texte s'aligne sur le contenu de .container-page (72rem, marges de 2rem) :
+// la marge vaut (largeur de page − 72rem) / 2 + 2rem, soit la largeur de la colonne − 34rem.
+// Le pourcentage, calculé sur la colonne, ne compte pas la barre de défilement (contrairement à 100vw).
+const margesTexte = {
+  gauche: {
+    normal: 'lg:pr-[max(2rem,calc(100%_-_34rem))] lg:pl-16',
+    resserre: 'lg:pr-[max(2rem,calc(100%_-_34rem))] lg:pl-12 xl:pl-16',
+  },
+  droite: {
+    normal: 'lg:pr-16 lg:pl-[max(2rem,calc(100%_-_34rem))]',
+    resserre: 'lg:pr-12 lg:pl-[max(2rem,calc(100%_-_34rem))] xl:pr-16',
+  },
+}[cote][espacement];
+---
+
+<!--
+  Photo à bord perdu et texte. À partir de lg : deux colonnes égales, la photo va jusqu'au bord de
+  l'écran et prend toute la hauteur du bloc, le texte reste aligné sur le conteneur de la page.
+-->
+<div class="grid lg:grid-cols-2 lg:items-stretch">
+  <div class:list={['relative w-full lg:aspect-auto', classePhoto, cote === 'droite' && 'lg:order-last']}>
+    <Photo
+      src={src}
+      alt={alt}
+      width={largeur}
+      height={hauteur}
+      widths={[640, 960, 1280, 1920]}
+      sizes="(min-width: 1024px) 50vw, 100vw"
+      loading={loading}
+      class="absolute inset-0 size-full"
+    />
+  </div>
+  <div class:list={['px-4 sm:px-6', margesTexte, className]}>
+    <slot />
+  </div>
+</div>

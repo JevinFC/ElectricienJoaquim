@@ -48,6 +48,15 @@ export interface Avis {
   source?: string;
 }
 
+export interface Promesse {
+  /** Identifiant stable, utilisé par les composants pour choisir une promesse. */
+  id: 'experience' | 'rappel' | 'devis';
+  /** Forme courte, pour les listes de preuves : « Rappel sous 24 h ». */
+  libelle: string;
+  /** Phrase complète à la première personne, pour les textes : « Je vous rappelle sous 24 h. » */
+  phrase: string;
+}
+
 export interface SiteConfig {
   /** URL publique du site, sans slash final. Utilisée pour le sitemap, les URL canoniques et le robots.txt. */
   url: string;
@@ -75,6 +84,22 @@ export interface SiteConfig {
   };
   /** Délai dans lequel les demandes sont rappelées, avec une espace insécable (« 24 h »). */
   delaiRappel: string;
+  /**
+   * Promesses affichées sur le site (hero, bandeau d'appel, pied de page, page Services…),
+   * dans leur ordre d'affichage. Aucun composant ne les écrit en dur : ils les lisent ici.
+   */
+  promesses: Promesse[];
+  /**
+   * Réponses de la FAQ (page Services) qui ne se déduisent pas du reste de la config.
+   * Une réponse qui contient encore un texte entre crochets est affichée en développement
+   * avec un marqueur « À valider », et masquée en production.
+   */
+  faq: {
+    /** Délai habituel entre l'accord sur le devis et le début des travaux. */
+    delaiIntervention: string;
+    /** Faut-il être présent pendant les travaux ? */
+    presenceTravaux: string;
+  };
   contact: {
     telephone: {
       /** Format affiché sur le site, par exemple '02 47 00 00 00'. */
@@ -133,6 +158,12 @@ export interface SiteConfig {
   reseaux: string[];
 }
 
+// Valeurs reprises à plusieurs endroits de la config : définies une seule fois ici.
+// TODO : nombre d'années de métier. Électricien depuis très jeune, il n'a jamais fait d'autre métier.
+const anneesMetier = '[N]';
+// Confirmé : les demandes sont toujours rappelées sous 24 h.
+const delaiRappel = '24 h';
+
 export const site: SiteConfig = {
   // TODO : remplacer par le nom de domaine définitif (le TLD .example est réservé et ne pointe nulle part).
   url: 'https://todo-nom-de-domaine.example',
@@ -150,16 +181,32 @@ export const site: SiteConfig = {
   },
 
   parcours: {
-    // TODO : nombre d'années de métier. Électricien depuis très jeune, il n'a jamais fait d'autre métier.
-    anneesMetier: '[N]',
+    anneesMetier,
     // TODO : année d'installation à son compte (« bientôt 2 ans » en septembre 2026).
     anneeInstallation: '[année]',
     // TODO : une phrase de Joaquim sur son métier, recopiée telle quelle.
     citation: '[Une phrase de Joaquim sur son métier, recopiée telle quelle]',
   },
 
-  // Confirmé : les demandes sont toujours rappelées sous 24 h.
-  delaiRappel: '24 h',
+  delaiRappel,
+
+  // TODO : promesses à valider avec le client avant la mise en ligne (ordre = ordre d'affichage).
+  promesses: [
+    {
+      id: 'experience',
+      libelle: `${anneesMetier} ans de métier`,
+      phrase: `J'exerce ce métier depuis ${anneesMetier} ans.`,
+    },
+    { id: 'rappel', libelle: `Rappel sous ${delaiRappel}`, phrase: `Je vous rappelle sous ${delaiRappel}.` },
+    { id: 'devis', libelle: 'Devis gratuit et détaillé', phrase: 'Le devis est gratuit et détaillé.' },
+  ],
+
+  faq: {
+    // TODO : délai habituel avant le début des travaux, à valider avec le client.
+    delaiIntervention: '[Délai habituel entre l’accord sur le devis et le début des travaux.]',
+    // TODO : réponse à valider avec le client (présence nécessaire ou non, accès au logement…).
+    presenceTravaux: '[Faut-il être présent pendant les travaux ? Réponse à valider avec Joaquim.]',
+  },
 
   contact: {
     telephone: {
@@ -253,3 +300,10 @@ export const site: SiteConfig = {
   // Exemple : ['https://g.page/…', 'https://www.facebook.com/…']
   reseaux: [],
 };
+
+/** Promesse de la config à partir de son identifiant. */
+export function promesse(id: Promesse['id']): Promesse {
+  const trouvee = site.promesses.find((candidate) => candidate.id === id);
+  if (!trouvee) throw new Error(`Promesse « ${id} » absente de site.promesses (src/config/site.ts).`);
+  return trouvee;
+}

@@ -1,0 +1,33 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Etiquette from './Etiquette.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  service: CollectionEntry<'services'>;
+}
+
+// Carte d'aiguillage de l'accueil : la situation du client en titre, sans photo.
+// Toute la carte est cliquable grâce au lien étiré sur le titre.
+const { service } = Astro.props;
+const { accroche, designation, etiquette, resume } = service.data;
+---
+
+<article
+  class="group relative flex h-full flex-col rounded-conteneur border border-bordure bg-tuffeau-clair p-6 transition-colors hover:border-cuivre has-[a:focus-visible]:border-cuivre has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-cuivre sm:p-8"
+>
+  <Etiquette texte={etiquette} />
+  <h3 class="mt-4 text-2xl leading-snug font-bold">
+    <a
+      href={`/services/${service.id}/`}
+      class="after:absolute after:inset-0 after:rounded-conteneur focus-visible:outline-none"
+    >
+      {accroche}<span class="sr-only">&nbsp;: tout sur {designation}</span>
+    </a>
+  </h3>
+  <p class="mt-3 flex-1 text-gris-ardoise">{resume}</p>
+  <span class="mt-6 inline-flex items-center gap-2 font-semibold text-cuivre" aria-hidden="true">
+    Tout sur {designation}
+    <Icon name="fleche" class="size-5 shrink-0 transition-transform group-hover:translate-x-1" />
+  </span>
+</article>

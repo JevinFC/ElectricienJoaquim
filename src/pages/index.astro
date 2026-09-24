@@ -3,13 +3,13 @@ import AvantApres from '../components/AvantApres.astro';
 import CtaBanner from '../components/CtaBanner.astro';
 import Hero from '../components/Hero.astro';
 import Icon from '../components/Icon.astro';
-import Photo from '../components/Photo.astro';
 import RealisationCard from '../components/RealisationCard.astro';
 import ReviewsSection from '../components/ReviewsSection.astro';
-import ServiceCard from '../components/ServiceCard.astro';
+import SituationCard from '../components/SituationCard.astro';
+import SplitMedia from '../components/SplitMedia.astro';
 import ZoneSection from '../components/ZoneSection.astro';
 import { photos } from '../config/photos.ts';
-import { site } from '../config/site.ts';
+import { promesse, site } from '../config/site.ts';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getRealisations, getServices, serviceParId } from '../lib/collections.ts';
 
@@ -21,7 +21,7 @@ const { contact, parcours, zone } = site;
 
 <BaseLayout
   title={`Électricien ${zone.libelle}`}
-  description="Électricien à Tours et en Indre-et-Loire : installation électrique neuve, rénovation et mise aux normes de tableaux électriques. Devis gratuit."
+  description={`Électricien ${zone.libelle} : installation électrique neuve, rénovation et mise aux normes de tableaux électriques. ${promesse('devis').libelle}.`}
 >
   <Hero />
 
@@ -34,16 +34,16 @@ const { contact, parcours, zone } = site;
         {
           services.map((service) => (
             <li>
-              <ServiceCard service={service} />
+              <SituationCard service={service} />
             </li>
           ))
         }
       </ul>
       <a
         href="/services/"
-        class="mt-8 inline-flex items-center gap-2 font-semibold text-cuivre underline-offset-4 hover:underline"
+        class="mt-8 inline-flex min-h-11 items-center gap-2 font-semibold text-cuivre underline-offset-4 hover:underline"
       >
-        Tous les services
+        Trouver le bon service pour votre situation
         <Icon name="fleche" class="size-5" />
       </a>
     </div>
@@ -51,28 +51,19 @@ const { contact, parcours, zone } = site;
 
   <!-- Rupture au milieu de la page : bande ardoise pleine largeur, portée par la photo. -->
   <section class="surface-dark bg-ardoise text-tuffeau" aria-labelledby="presentation-titre">
-    <div class="grid lg:grid-cols-2">
-      <Photo
-        {...photos.portrait}
-        width={960}
-        height={1080}
-        sizes="(min-width: 1024px) 50vw, 100vw"
-        class="aspect-4/3 w-full sm:aspect-16/9 lg:aspect-auto lg:h-full lg:min-h-[34rem]"
-      />
-      <div class="px-4 py-16 sm:px-6 lg:py-24 lg:pr-[max(2rem,calc((100vw_-_72rem)/2_+_2rem))] lg:pl-16">
-        <h2 id="presentation-titre" class="max-w-md text-3xl leading-tight font-bold sm:text-4xl">
-          Je n'ai jamais fait d'autre métier
-        </h2>
-        <p class="mt-6 max-w-xl text-lg text-sable">
-          J'ai commencé l'électricité très jeune. Depuis {parcours.anneeInstallation}, je travaille à mon compte à
-          {contact.adresse.ville}, chez les particuliers&nbsp;: installations neuves, rénovations et tableaux électriques.
-        </p>
-        <blockquote class="mt-8 max-w-xl border-l-[3px] border-cuivre-clair pl-5 font-titre text-xl leading-snug">
-          <p>«&nbsp;{parcours.citation}&nbsp;»</p>
-        </blockquote>
-        <a href="/a-propos/" class="btn btn-outline-light mt-10">Mon parcours</a>
-      </div>
-    </div>
+    <SplitMedia {...photos.portrait} classePhoto="aspect-4/3 sm:aspect-16/9 lg:min-h-[34rem]" class="py-16 lg:py-24">
+      <h2 id="presentation-titre" class="max-w-md text-3xl leading-tight font-bold sm:text-4xl">
+        Je n'ai jamais fait d'autre métier
+      </h2>
+      <p class="mt-6 max-w-xl text-lg text-sable">
+        J'ai commencé l'électricité très jeune. Depuis {parcours.anneeInstallation}, je travaille à mon compte à
+        {contact.adresse.ville}, chez les particuliers&nbsp;: installations neuves, rénovations et tableaux électriques.
+      </p>
+      <blockquote class="mt-8 max-w-xl border-l-[3px] border-cuivre-clair pl-5 font-titre text-xl leading-snug">
+        <p>«&nbsp;{parcours.citation}&nbsp;»</p>
+      </blockquote>
+      <a href="/a-propos/" class="btn btn-outline-light mt-10">Mon parcours</a>
+    </SplitMedia>
   </section>
 
   <section class="py-16 sm:py-24" aria-labelledby="realisations-titre">

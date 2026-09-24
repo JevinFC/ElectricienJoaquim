@@ -4,6 +4,19 @@ description: "Installation électrique complète pour votre maison neuve à Tour
 resume: "Maison neuve ou extension : je prévois avec vous chaque prise et chaque circuit, jusqu'à la mise en service."
 etiquette: Installation neuve
 ordre: 1
+accroche: "Vous construisez ou agrandissez"
+designation: "l'installation électrique neuve"
+pourVousSi:
+  - "Vous faites construire une maison individuelle"
+  - "Vous agrandissez votre maison : extension, garage, combles aménagés"
+  - "Vous avez besoin de l'attestation Consuel pour la mise en service"
+  - "Vous voulez prévoir dès maintenant une borne de recharge ou une pompe à chaleur"
+# TODO: à valider avec le client
+inclus:
+  - "Plan des prises, éclairages et circuits, établi avec vous"
+  - "Passage des gaines, pose des boîtiers et câblage selon la norme NF C 15-100"
+  - "Tableau électrique complet, aux circuits repérés"
+  - "Installation préparée pour l'attestation de conformité Consuel"
 # TODO : photo à prendre. Placer le JPG dans src/assets/services/, ajouter la ligne
 # image: ../../assets/services/installation-neuve.jpg, puis adapter imageAlt à la photo réelle.
 imageAlt: Installation électrique en cours dans une maison neuve
@@ -25,4 +38,4 @@ En fin de chantier, je vous présente votre tableau électrique et ses circuits 
 
 ## Votre projet à Tours et en Indre-et-Loire
 
-J'interviens à Tours et dans toute l'Indre-et-Loire, pour les maisons individuelles comme pour les extensions. Parlez-moi de votre projet : je vous rappelle sous 24 h, puis je vous remets un devis détaillé et gratuit.
+J'interviens à Tours et dans toute l'Indre-et-Loire, pour les maisons individuelles comme pour les extensions. Parlez-moi de votre projet.

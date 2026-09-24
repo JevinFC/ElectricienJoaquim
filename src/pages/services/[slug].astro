@@ -7,9 +7,9 @@ import PageHeader from '../../components/PageHeader.astro';
 import Photo from '../../components/Photo.astro';
 import RealisationCard from '../../components/RealisationCard.astro';
 import ServiceCard from '../../components/ServiceCard.astro';
-import { site } from '../../config/site.ts';
+import { promesse, site } from '../../config/site.ts';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getRealisations, getServices, repereService } from '../../lib/collections.ts';
+import { getRealisations, getServices } from '../../lib/collections.ts';
 
 export const getStaticPaths = (async () => {
   const services = await getCollection('services');
@@ -24,7 +24,7 @@ const { titre, description, resume, etiquette, image, imageAlt } = service.data;
 
 const autresServices = (await getServices()).filter((autre) => autre.id !== service.id);
 const realisationsLiees = (await getRealisations()).filter((realisation) => realisation.data.service.id === service.id);
-const { contact, delaiRappel, zone } = site;
+const { contact, zone } = site;
 const { telephone } = contact;
 ---
 
@@ -35,7 +35,7 @@ const { telephone } = contact;
       { href: '/services/', label: 'Services' },
     ]}
     filCourant={titre}
-    etiquette={{ repere: repereService(service), texte: etiquette }}
+    etiquette={etiquette}
     titre={`${titre} ${zone.libelle}`}
     intro={resume}
   />
@@ -59,7 +59,7 @@ const { telephone } = contact;
     <aside class="lg:sticky lg:top-28 lg:self-start" aria-labelledby="encart-titre">
       <div class="rounded-conteneur border border-bordure bg-tuffeau-clair p-6">
         <h2 id="encart-titre" class="text-xl font-bold">Votre projet</h2>
-        <p class="mt-2 text-gris-ardoise">Je vous rappelle sous {delaiRappel}. Le devis est gratuit et détaillé.</p>
+        <p class="mt-2 text-gris-ardoise">{promesse('rappel').phrase} {promesse('devis').phrase}</p>
         <div class="mt-6 flex flex-col gap-3">
           <a href={`tel:${telephone.lien}`} class="btn btn-primary">
             <Icon name="telephone" class="size-5" />

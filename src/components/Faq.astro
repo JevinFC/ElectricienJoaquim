@@ -1,0 +1,65 @@
+---
+import Etiquette from './Etiquette.astro';
+import Icon from './Icon.astro';
+import { promesse, site } from '../config/site.ts';
+import { contientEmplacement } from '../lib/format.ts';
+
+const { assuranceDecennale, faq, zone } = site;
+const communes = new Intl.ListFormat('fr', { type: 'conjunction' }).format(zone.communes);
+
+// Réponses construites depuis la config : aucune promesse, aucun délai ni aucune garantie n'est écrit ici.
+const questions = [
+  {
+    question: 'Êtes-vous assuré pour les travaux électriques\u00a0?',
+    reponse: `Oui. Mes travaux sont couverts par une assurance responsabilité civile décennale souscrite auprès de ${assuranceDecennale.assureur}, pour la zone suivante\u00a0: ${assuranceDecennale.zoneCouverte}. Ces informations figurent aussi sur chaque devis.`,
+  },
+  {
+    question: 'Sous quel délai pouvez-vous intervenir\u00a0?',
+    reponse: `${promesse('rappel').phrase} ${faq.delaiIntervention}`,
+  },
+  {
+    question: 'Intervenez-vous dans ma commune\u00a0?',
+    reponse: `J'interviens dans tout le département (${zone.departement}, ${zone.numeroDepartement}), notamment à ${communes}. Votre commune n'apparaît pas dans la liste\u00a0? Appelez-moi pour vérifier.`,
+  },
+  {
+    question: 'Comment se passe le devis\u00a0?',
+    reponse: `${promesse('devis').phrase} Il décrit les travaux prévus et leur prix, et ne vous engage que si vous l'acceptez.`,
+  },
+  {
+    question: 'Dois-je être présent pendant les travaux\u00a0?',
+    reponse: faq.presenceTravaux,
+  },
+];
+
+// Une réponse qui contient encore un texte entre crochets est à valider : visible en
+// développement avec un marqueur, masquée en production (comme la section des avis).
+const visibles = questions
+  .map((entree) => ({ ...entree, aValider: contientEmplacement(entree.reponse) }))
+  .filter((entree) => import.meta.env.DEV || !entree.aValider);
+---
+
+{
+  visibles.length > 0 && (
+    <section id="faq" class="border-t border-bordure py-16 sm:py-20" aria-labelledby="faq-titre">
+      <div class="container-page">
+        <h2 id="faq-titre" class="text-3xl leading-tight font-bold sm:text-4xl">
+          Questions fréquentes
+        </h2>
+        <div class="mt-8 max-w-3xl divide-y divide-bordure border-y border-bordure">
+          {visibles.map(({ question, reponse, aValider }) => (
+            <details class="group">
+              <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-4 text-lg font-semibold [&::-webkit-details-marker]:hidden">
+                <span>{question}</span>
+                <Icon name="chevron" class="size-5 shrink-0 text-cuivre transition-transform group-open:rotate-90" />
+              </summary>
+              <div class="pb-6 text-gris-ardoise">
+                {aValider && <Etiquette texte="À valider, visible en développement uniquement" class="mb-3" />}
+                <p>{reponse}</p>
+              </div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

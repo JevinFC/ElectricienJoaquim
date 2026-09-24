@@ -20,7 +20,6 @@ export interface GalleryItem {
   dateLabel: string;
   serviceId: string;
   /** Repère et libellé de l'étiquette du service, par exemple « C2 » et « Rénovation ». */
-  serviceRepere: string;
   serviceEtiquette: string;
   couverture: GalleryImage;
   /** Photos affichées dans la visionneuse, couverture comprise. */
@@ -166,8 +165,8 @@ export default function Gallery({ items, services }: Props) {
                   className="aspect-4/3 w-full object-cover"
                 />
                 {/* Étiquette de repérage du service, comme sur les cartes Astro (styles dans global.css). */}
-                <span className="etiquette absolute top-3 left-3">
-                  <span className="etiquette-repere">{item.serviceRepere}</span>
+                <span className="etiquette etiquette-photo absolute top-3 left-3">
+                  <span className="losange" aria-hidden="true" />
                   <span>{item.serviceEtiquette}</span>
                 </span>
                 <span className="absolute right-3 bottom-3 rounded-controle bg-ardoise px-2 py-1 text-xs font-semibold text-tuffeau">

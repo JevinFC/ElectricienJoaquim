@@ -9,8 +9,8 @@ interface Props {
 
 const { avant, apres, legende } = photos.avantApres;
 const vues = [
-  { repere: 'Avant', photo: avant },
-  { repere: 'Après', photo: apres },
+  { libelle: 'Avant', photo: avant },
+  { libelle: 'Après', photo: apres },
 ];
 ---
 
@@ -18,7 +18,7 @@ const vues = [
 <figure class={Astro.props.class}>
   <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
     {
-      vues.map(({ repere, photo }) => (
+      vues.map(({ libelle, photo }) => (
         <div class="relative">
           <Photo
             {...photo}
@@ -27,7 +27,7 @@ const vues = [
             sizes="(min-width: 640px) 50vw, 100vw"
             class="aspect-4/3 w-full rounded-conteneur"
           />
-          <Etiquette repere={repere} class="absolute top-3 left-3" />
+          <Etiquette texte={libelle} surPhoto class="absolute top-3 left-3" />
         </div>
       ))
     }

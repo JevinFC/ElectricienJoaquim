@@ -5,10 +5,10 @@ import Photo from './Photo.astro';
 import { photos } from '../config/photos.ts';
 import { site } from '../config/site.ts';
 
-const { entreprise, contact, zone, parcours, delaiRappel } = site;
+const { entreprise, contact, zone, promesses } = site;
 const { telephone } = contact;
-// Preuves propres à l'entreprise, à la place des arguments communs à tous les électriciens.
-const preuves = [`${parcours.anneesMetier} ans de métier`, `Rappel sous ${delaiRappel}`, 'Devis gratuit et détaillé'];
+// Preuves propres à l'entreprise, lues dans la config (promesses).
+const preuves = promesses.map((promesse) => promesse.libelle);
 ---
 
 <!-- Prolonge l'en-tête ardoise ; le filet cuivre de 3 px marque la transition vers le contenu. -->
@@ -17,7 +17,7 @@ const preuves = [`${parcours.anneesMetier} ans de métier`, `Rappel sous ${dela
     class="container-page grid items-center gap-12 pt-10 pb-14 sm:pt-16 sm:pb-20 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-16 lg:pt-20 lg:pb-24"
   >
     <div>
-      <Etiquette repere={zone.numeroDepartement} texte={`${contact.adresse.ville} · ${zone.departement}`} />
+      <Etiquette texte={`${contact.adresse.ville}, ${zone.departement} (${zone.numeroDepartement})`} />
       <h1 class="filet mt-6 text-4xl leading-[1.1] font-bold sm:text-5xl lg:text-6xl">
         {entreprise.gerantNomUsuel}, électricien à {contact.adresse.ville}
       </h1>

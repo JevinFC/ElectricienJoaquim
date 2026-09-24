@@ -1,39 +1,149 @@
 ---
 import CtaBanner from '../../components/CtaBanner.astro';
+import Etiquette from '../../components/Etiquette.astro';
+import Faq from '../../components/Faq.astro';
+import Icon from '../../components/Icon.astro';
 import PageHeader from '../../components/PageHeader.astro';
-import ServiceCard from '../../components/ServiceCard.astro';
-import { site } from '../../config/site.ts';
+import RealisationCard from '../../components/RealisationCard.astro';
+import SplitMedia from '../../components/SplitMedia.astro';
+import { promesse, site } from '../../config/site.ts';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getServices } from '../../lib/collections.ts';
+import { getRealisations, getServices } from '../../lib/collections.ts';
+import { etapesIntervention } from '../../lib/intervention.ts';
 
-const services = await getServices();
+// Rôle de la page : aider le visiteur à choisir son service, puis le rassurer.
+const [services, realisations] = await Promise.all([getServices(), getRealisations()]);
 const { zone } = site;
+
+// Réalisations triées de la plus récente à la plus ancienne : la première trouvée est la dernière en date.
+const derniereRealisation = (id: string) => realisations.find((realisation) => realisation.data.service.id === id);
 ---
 
 <BaseLayout
   title={`Services d'électricien ${zone.libelle}`}
-  description="Installation électrique neuve, rénovation électrique, remplacement et mise aux normes de tableaux électriques à Tours et en Indre-et-Loire. Devis gratuit."
+  description={`Installation électrique neuve, rénovation, remplacement et mise aux normes de tableaux électriques ${zone.libelle}. ${promesse('devis').libelle}.`}
 >
   <PageHeader
     fil={[{ href: '/', label: 'Accueil' }]}
     filCourant="Services"
     titre={`Services d'électricité ${zone.libelle}`}
     intro="De la maison neuve à la mise en sécurité d'un logement ancien, je réalise vos travaux électriques selon la norme NF C 15-100."
-  />
-
-  <section class="py-16 sm:py-20" aria-label="Liste des services">
-    <div class="container-page">
-      <ul class="grid gap-6 md:grid-cols-3">
+  >
+    <nav slot="aside" aria-labelledby="sommaire-titre" class="rounded-conteneur border border-ardoise-clair p-6">
+      <h2 id="sommaire-titre" class="font-sans text-base font-semibold text-sable">Par où commencer&nbsp;?</h2>
+      <ul class="mt-2 divide-y divide-ardoise-clair">
         {
           services.map((service) => (
             <li>
-              <ServiceCard service={service} headingLevel={2} />
+              <a
+                href={`#${service.id}`}
+                class="flex min-h-11 flex-col justify-center py-3 underline-offset-4 hover:underline"
+              >
+                <span class="font-semibold">{service.data.accroche}</span>
+                <span class="text-sm text-sable">{service.data.titre}</span>
+              </a>
             </li>
           ))
         }
+        <li>
+          <a href="#faq" class="flex min-h-11 items-center py-3 font-semibold underline-offset-4 hover:underline">
+            Questions fréquentes
+          </a>
+        </li>
       </ul>
+    </nav>
+  </PageHeader>
+
+  {
+    services.map((service, index) => {
+      const { titre, resume, accroche, designation, pourVousSi, inclus, image, imageAlt } = service.data;
+      const derniere = derniereRealisation(service.id);
+      // Le premier bloc suit directement le filet cuivre de l'en-tête : pas de séparateur en plus.
+      return (
+        <section
+          id={service.id}
+          class:list={[index > 0 && 'border-t border-bordure']}
+          aria-labelledby={`${service.id}-titre`}
+        >
+          <SplitMedia
+            src={image}
+            alt={imageAlt}
+            cote={index % 2 === 0 ? 'gauche' : 'droite'}
+            loading={index === 0 ? 'eager' : 'lazy'}
+            espacement="resserre"
+            classePhoto="aspect-4/3 lg:min-h-[32.5rem]"
+            class="py-16 sm:py-20"
+          >
+            <Etiquette texte={accroche} />
+            <h2 id={`${service.id}-titre`} class="mt-4 text-3xl leading-tight font-bold sm:text-4xl">
+              {titre}
+            </h2>
+            <p class="mt-4 text-lg text-gris-ardoise">{resume}</p>
+            <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-1">
+              <div>
+                <h3 class="text-xl font-bold">C'est pour vous si…</h3>
+                <ul class="liste-losanges mt-4 space-y-2">
+                  {pourVousSi.map((situation) => (
+                    <li>{situation}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold">Ce qui est compris</h3>
+                <ul class="liste-losanges mt-4 space-y-2">
+                  {inclus.map((prestation) => (
+                    <li>{prestation}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            {derniere && (
+              <div class="mt-10">
+                <h3 class="text-xl font-bold">Dernier chantier</h3>
+                <div class="mt-4 max-w-sm">
+                  <RealisationCard realisation={derniere} service={service} headingLevel={4} />
+                </div>
+              </div>
+            )}
+            <div class="mt-10 flex flex-col gap-4 sm:items-start">
+              <a href="/contact/" class="btn btn-secondary">
+                Demander un devis<span class="sr-only"> pour {designation}</span>
+              </a>
+              <a
+                href={`/services/${service.id}/`}
+                class="inline-flex min-h-11 items-center gap-2 font-semibold text-cuivre underline-offset-4 hover:underline lg:whitespace-nowrap"
+              >
+                Tout sur {designation}
+                <Icon name="fleche" class="size-5 shrink-0" />
+              </a>
+            </div>
+          </SplitMedia>
+        </section>
+      );
+    })
+  }
+
+  <section class="border-t border-bordure py-16 sm:py-20" aria-labelledby="intervention-titre">
+    <div class="container-page">
+      <h2 id="intervention-titre" class="text-3xl leading-tight font-bold sm:text-4xl">
+        Comment se passe une intervention
+      </h2>
+      <ol class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          etapesIntervention.map(({ titre, texte }, index) => (
+            <li class="border-t-[3px] border-cuivre pt-5">
+              <span class="font-titre text-3xl font-bold text-cuivre" aria-hidden="true">
+                {index + 1}
+              </span>
+              <h3 class="mt-2 text-xl font-bold">{titre}</h3>
+              <p class="mt-2 text-gris-ardoise">{texte}</p>
+            </li>
+          ))
+        }
+      </ol>
     </div>
   </section>
 
+  <Faq />
   <CtaBanner />
 </BaseLayout>

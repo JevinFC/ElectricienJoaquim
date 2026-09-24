@@ -2,12 +2,11 @@
 import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import Etiquette from './Etiquette.astro';
-import { repereService } from '../lib/collections.ts';
 import { formatDateIso, formatMoisAnnee } from '../lib/format.ts';
 
 interface Props {
   realisation: CollectionEntry<'realisations'>;
-  /** Service lié : son repère et son libellé sont repris sur l'étiquette de la photo. */
+  /** Service lié : son libellé est repris sur l'étiquette de la photo. */
   service: CollectionEntry<'services'>;
   /** Niveau du titre, selon la hiérarchie de la page. */
   headingLevel?: 2 | 3 | 4;
@@ -30,7 +29,7 @@ const { titre, ville, date, couverture } = realisation.data;
       sizes="(min-width: 640px) 50vw, 100vw"
       class="aspect-4/3 w-full object-cover"
     />
-    <Etiquette repere={repereService(service)} texte={service.data.etiquette} class="absolute top-3 left-3" />
+    <Etiquette texte={service.data.etiquette} surPhoto class="absolute top-3 left-3" />
   </div>
   <div class="flex flex-1 flex-col p-5">
     <Titre class="text-lg leading-snug font-bold">
