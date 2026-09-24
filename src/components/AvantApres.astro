@@ -1,0 +1,36 @@
+---
+import Etiquette from './Etiquette.astro';
+import Photo from './Photo.astro';
+import { photos } from '../config/photos.ts';
+
+interface Props {
+  class?: string;
+}
+
+const { avant, apres, legende } = photos.avantApres;
+const vues = [
+  { repere: 'Avant', photo: avant },
+  { repere: 'Après', photo: apres },
+];
+---
+
+<!-- Un même tableau avant et après les travaux : la preuve la plus parlante du métier. -->
+<figure class={Astro.props.class}>
+  <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+    {
+      vues.map(({ repere, photo }) => (
+        <div class="relative">
+          <Photo
+            {...photo}
+            width={800}
+            height={600}
+            sizes="(min-width: 640px) 50vw, 100vw"
+            class="aspect-4/3 w-full rounded-conteneur"
+          />
+          <Etiquette repere={repere} class="absolute top-3 left-3" />
+        </div>
+      ))
+    }
+  </div>
+  <figcaption class="mt-4 text-gris-ardoise">{legende}</figcaption>
+</figure>

@@ -2,12 +2,15 @@
  * Configuration centralisée du site.
  *
  * Toutes les informations sur l'entreprise sont lues depuis ce fichier : aucun
- * composant ni aucune page ne doit les écrire en dur. Chaque valeur contenant
- * « TODO » est à compléter avec le client avant la mise en ligne. Pour toutes
- * les retrouver : `grep -rn "TODO" src`.
+ * composant ni aucune page ne doit les écrire en dur.
+ *
+ * Une information encore inconnue s'écrit entre crochets, par exemple
+ * '[nom de l’assureur]' : le site l'affiche telle quelle, comme un emplacement
+ * réservé. Chacune est signalée par un commentaire TODO ; pour toutes les
+ * retrouver avant la mise en ligne : `grep -rn "TODO" src`.
  *
  * Règle absolue : ne jamais inventer de certification, d'avis client, de
- * chiffre ou d'années d'expérience. Une information non confirmée reste en TODO.
+ * chiffre ou d'années d'expérience. Une information non confirmée reste entre crochets.
  */
 
 export type Jour = 'lundi' | 'mardi' | 'mercredi' | 'jeudi' | 'vendredi' | 'samedi' | 'dimanche';
@@ -50,7 +53,10 @@ export interface SiteConfig {
   url: string;
   entreprise: {
     nom: string;
+    /** Nom légal complet du dirigeant : mentions légales, confidentialité, données structurées. */
     gerant: string;
+    /** Nom d'usage du dirigeant, affiché dans les textes de présentation (« Je suis … »). */
+    gerantNomUsuel: string;
     formeJuridique: string;
     /** Uniquement pour une société (EURL, SARL, SASU…). Laisser '' pour une entreprise individuelle. */
     capitalSocial: string;
@@ -58,6 +64,17 @@ export interface SiteConfig {
     immatriculation: string;
     tva: string;
   };
+  /** Parcours du gérant, repris dans le hero, le bandeau « Qui suis-je » et la page À propos. */
+  parcours: {
+    /** Années de métier d'électricien, salarié puis à son compte, par exemple '25'. */
+    anneesMetier: string;
+    /** Année d'installation à son compte, par exemple '2024'. */
+    anneeInstallation: string;
+    /** Une phrase du gérant sur son métier, recopiée telle quelle, sans guillemets. */
+    citation: string;
+  };
+  /** Délai dans lequel les demandes sont rappelées, avec une espace insécable (« 24 h »). */
+  delaiRappel: string;
   contact: {
     telephone: {
       /** Format affiché sur le site, par exemple '02 47 00 00 00'. */
@@ -121,34 +138,49 @@ export const site: SiteConfig = {
   url: 'https://todo-nom-de-domaine.example',
 
   entreprise: {
-    nom: 'TODO Nom',
-    gerant: 'TODO Prénom Nom',
-    formeJuridique: 'TODO forme juridique (ex. entrepreneur individuel, EURL, SASU)',
-    capitalSocial: 'TODO capital social (société uniquement, sinon laisser vide)',
-    siret: 'TODO SIRET (14 chiffres)',
-    immatriculation: 'TODO immatriculation (ex. Registre national des entreprises)',
-    tva: 'TODO n° de TVA intracommunautaire ou mention « TVA non applicable, art. 293 B du CGI »',
+    nom: 'Joaquim Machado',
+    gerant: 'Joaquim Ferreira Martins Machado',
+    gerantNomUsuel: 'Joaquim Machado',
+    formeJuridique: 'Entrepreneur individuel',
+    capitalSocial: '',
+    siret: '394 712 699 00021',
+    // TODO : registre indiqué sur l'extrait RNE ou l'avis de situation Sirene.
+    immatriculation: '[immatriculation, ex. Registre national des entreprises]',
+    tva: 'TVA non applicable, art. 293 B du CGI',
   },
+
+  parcours: {
+    // TODO : nombre d'années de métier. Électricien depuis très jeune, il n'a jamais fait d'autre métier.
+    anneesMetier: '[N]',
+    // TODO : année d'installation à son compte (« bientôt 2 ans » en septembre 2026).
+    anneeInstallation: '[année]',
+    // TODO : une phrase de Joaquim sur son métier, recopiée telle quelle.
+    citation: '[Une phrase de Joaquim sur son métier, recopiée telle quelle]',
+  },
+
+  // Confirmé : les demandes sont toujours rappelées sous 24 h.
+  delaiRappel: '24 h',
 
   contact: {
     telephone: {
-      affichage: 'TODO téléphone',
-      lien: 'TODO',
+      affichage: '06 60 69 36 85',
+      lien: '+33660693685',
     },
-    email: 'TODO@example.com',
+    // TODO : adresse e-mail de contact.
+    email: '[adresse e-mail]',
     adresse: {
-      rue: 'TODO adresse',
-      codePostal: 'TODO code postal',
-      ville: 'TODO commune',
+      rue: '69 avenue de l’Europe',
+      codePostal: '37100',
+      ville: 'Tours',
       region: 'Centre-Val de Loire',
     },
   },
 
   horaires: {
-    // TODO : renseigner les horaires réels. Exemple de format :
+    // TODO : renseigner les horaires réels, puis vider la note si elle devient inutile. Exemple de format :
     // plages: [{ jours: ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi'], ouverture: '08:00', fermeture: '18:00' }],
     plages: [],
-    note: 'TODO horaires à renseigner',
+    note: '[horaires à renseigner]',
   },
 
   zone: {
@@ -177,10 +209,11 @@ export const site: SiteConfig = {
   },
 
   assuranceDecennale: {
-    assureur: 'TODO nom de l’assureur',
-    coordonnees: 'TODO adresse de l’assureur',
-    numeroContrat: 'TODO n° de contrat',
-    zoneCouverte: 'TODO zone géographique couverte (ex. France métropolitaine)',
+    // TODO : informations figurant sur l'attestation d'assurance décennale.
+    assureur: '[nom de l’assureur]',
+    coordonnees: '[adresse de l’assureur]',
+    numeroContrat: '[n° de contrat]',
+    zoneCouverte: '[zone géographique couverte, ex. France métropolitaine]',
   },
 
   // Qualifications réellement détenues, avec justificatif. Exemple de format :
@@ -193,24 +226,28 @@ export const site: SiteConfig = {
 
   // Médiateur de la consommation auquel l'entreprise adhère (obligatoire pour travailler avec des particuliers).
   mediateur: {
-    nom: 'TODO nom du médiateur de la consommation',
-    adresse: 'TODO adresse postale du médiateur',
-    site: 'TODO site internet du médiateur',
+    // TODO : nom, adresse et site du médiateur.
+    nom: '[nom du médiateur de la consommation]',
+    adresse: '[adresse postale du médiateur]',
+    site: '[site internet du médiateur]',
   },
 
   // Coordonnées issues de la politique de confidentialité de Vercel (vercel.com/legal, juin 2026).
   hebergeur: {
     nom: 'Vercel Inc.',
     adresse: '440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis',
-    telephone: 'TODO téléphone de l’hébergeur (à vérifier sur vercel.com)',
+    // TODO : téléphone à vérifier sur vercel.com.
+    telephone: '[téléphone de l’hébergeur]',
     site: 'https://vercel.com',
   },
 
   donneesPersonnelles: {
-    prestataireFormulaire: 'TODO prestataire du formulaire (Formspree ou Web3Forms)',
-    // Référence CNIL pour une demande restée sans suite : 3 ans à compter du dernier contact.
-    dureeConservation: 'TODO durée de conservation à valider (ex. 3 ans à compter du dernier contact)',
-    miseAJour: 'TODO date de mise à jour',
+    // TODO : prestataire choisi pour le formulaire (Formspree ou Web3Forms).
+    prestataireFormulaire: '[prestataire du formulaire]',
+    // TODO : durée à valider. Référence CNIL pour une demande restée sans suite : 3 ans à compter du dernier contact.
+    dureeConservation: '[durée de conservation, ex. 3 ans à compter du dernier contact]',
+    // TODO : date de mise à jour de la politique de confidentialité.
+    miseAJour: '[date de mise à jour]',
   },
 
   // Exemple : ['https://g.page/…', 'https://www.facebook.com/…']

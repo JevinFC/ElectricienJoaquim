@@ -14,9 +14,10 @@ const cheminActuel = Astro.url.pathname;
 const { telephone } = site.contact;
 ---
 
-<header class="sticky top-0 z-40 border-b border-line bg-paper">
+<!-- En-tête ardoise : forme un bloc continu avec le hero (ou l'en-tête de page) qui le suit. -->
+<header class="surface-dark sticky top-0 z-40 bg-ardoise text-tuffeau">
   <div class="container-page flex h-16 items-center gap-4 lg:h-20">
-    <a href="/" class="-m-1 rounded-md p-1" aria-label={`${site.entreprise.nom} Électricité, accueil`}>
+    <a href="/" class="-m-1 rounded-controle p-1" aria-label={`${site.entreprise.nom} Électricité, accueil`}>
       <Logotype />
     </a>
 
@@ -24,15 +25,15 @@ const { telephone } = site.contact;
       <ul
         id="menu-principal"
         data-open="false"
-        class="absolute inset-x-0 top-full hidden border-b border-line bg-paper px-4 pb-4 shadow-[0_16px_24px_-16px_rgb(31_35_40/0.3)] data-[open=true]:block sm:px-6 lg:static lg:flex lg:items-center lg:gap-8 lg:border-0 lg:p-0 lg:shadow-none"
+        class="absolute inset-x-0 top-full hidden border-t border-b-[3px] border-t-ardoise-clair border-b-cuivre bg-ardoise px-4 pb-4 data-[open=true]:block sm:px-6 lg:static lg:flex lg:items-center lg:gap-8 lg:border-0 lg:p-0"
       >
         {
           navigation.map(({ href, label }) => (
-            <li class="border-t border-line first:border-t-0 lg:border-0">
+            <li class="border-t border-ardoise-clair first:border-t-0 lg:border-0">
               <a
                 href={href}
                 aria-current={cheminActuel.startsWith(href) ? 'page' : undefined}
-                class="block py-4 text-lg font-bold decoration-2 underline-offset-8 hover:underline hover:decoration-accent aria-[current=page]:underline aria-[current=page]:decoration-ink lg:py-2 lg:text-base"
+                class="block py-4 text-lg font-semibold decoration-2 underline-offset-8 hover:underline hover:decoration-cuivre-clair aria-[current=page]:underline aria-[current=page]:decoration-cuivre-clair lg:py-2 lg:text-base"
               >
                 {label}
               </a>
@@ -49,7 +50,7 @@ const { telephone } = site.contact;
       </a>
       <button
         type="button"
-        class="group -mr-2 inline-flex size-12 items-center justify-center rounded-lg lg:hidden"
+        class="group -mr-2 inline-flex size-12 items-center justify-center rounded-controle lg:hidden"
         aria-expanded="false"
         aria-controls="menu-principal"
         data-menu-toggle

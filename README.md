@@ -5,10 +5,11 @@ Site vitrine statique d'un artisan électricien : installation électrique neuve
 - **Astro 7** en sortie 100 % statique, **TypeScript strict**.
 - **Tailwind CSS 4**.
 - **React 19** uniquement pour deux îles : la galerie des réalisations et le formulaire de contact.
-- Polices **Manrope** auto-hébergées via Fontsource : aucune requête vers Google Fonts.
+- Polices **Bitter** (titres et logotype), **Public Sans** (textes) et **IBM Plex Mono** (étiquettes de repérage), auto-hébergées via Fontsource : aucune requête vers Google Fonts.
+- Palette « Tuffeau & Cuivre » : ardoise, tuffeau et cuivre (détail dans `src/styles/global.css`).
 - Déploiement prévu sur **Vercel**.
 
-Toutes les informations sur l'entreprise sont centralisées dans [`src/config/site.ts`](src/config/site.ts). Les valeurs encore inconnues contiennent le mot **TODO**.
+Toutes les informations sur l'entreprise sont centralisées dans [`src/config/site.ts`](src/config/site.ts), et les photos du site dans [`src/config/photos.ts`](src/config/photos.ts). Les informations encore inconnues sont écrites **entre crochets** (`[N]`, `[adresse e-mail]`…) et affichées telles quelles comme emplacements réservés ; chacune est signalée par un commentaire **TODO**.
 
 ## Sommaire
 
@@ -17,7 +18,7 @@ Toutes les informations sur l'entreprise sont centralisées dans [`src/config/si
 3. [Remplir la configuration](#3-remplir-la-configuration-srcconfigsitets)
 4. [Ajouter une réalisation](#4-ajouter-une-réalisation)
 5. [Ajouter un service](#5-ajouter-un-service)
-6. [Remplacer les visuels provisoires](#6-remplacer-les-visuels-provisoires)
+6. [Ajouter les photos](#6-ajouter-les-photos)
 7. [Configurer le formulaire de contact](#7-configurer-le-formulaire-de-contact)
 8. [Déployer sur Vercel](#8-déployer-sur-vercel)
 9. [Qualité, performance et accessibilité](#9-qualité-performance-et-accessibilité)
@@ -51,14 +52,15 @@ Le build échoue à la moindre erreur TypeScript ou si un contenu ne respecte pa
 
 ```text
 src/
-├── config/site.ts           ← toutes les infos de l'entreprise (TODO à remplir)
+├── config/site.ts           ← toutes les infos de l'entreprise ([…] et TODO à remplir)
+├── config/photos.ts         ← photos du site (hero, portrait, avant/après) = liste des prises de vue
 ├── content.config.ts        ← schémas des collections (services, réalisations)
 ├── content/
 │   ├── services/            ← 1 fichier Markdown par service
 │   └── realisations/        ← 1 fichier Markdown par chantier (+ _modele.md)
-├── assets/                  ← images optimisées par Astro (visuels provisoires en SVG)
+├── assets/                  ← images optimisées par Astro (og-default.png, puis les vraies photos)
 ├── layouts/BaseLayout.astro ← <head> (SEO, Open Graph, JSON-LD), en-tête, pied de page
-├── components/              ← composants Astro, icônes, motif, îles React (.tsx)
+├── components/              ← composants Astro (Photo, Etiquette…), icônes, îles React (.tsx)
 ├── lib/                     ← utilitaires (formatage des dates et horaires, requêtes)
 ├── styles/global.css        ← Tailwind 4 : jetons de couleurs, police, styles communs
 └── pages/                   ← une page = une URL (+ robots.txt généré)
@@ -71,9 +73,9 @@ Les pages générées :
 
 | URL | Contenu |
 |---|---|
-| `/` | Accueil : services, confiance, dernières réalisations, présentation, avis, zone |
+| `/` | Accueil : hero, services, bandeau « Qui suis-je », avant/après et derniers chantiers, avis, zone |
 | `/services/` et `/services/<service>/` | Liste des services et une page par service |
-| `/realisations/` | Galerie filtrable avec visionneuse de photos |
+| `/realisations/` | Avant/après, puis galerie filtrable avec visionneuse de photos |
 | `/a-propos/` | Présentation du gérant, méthode, garanties |
 | `/contact/` | Coordonnées et formulaire de demande de devis |
 | `/mentions-legales/`, `/confidentialite/` | Pages légales générées depuis la config |
@@ -83,6 +85,8 @@ Les pages générées :
 ## 3. Remplir la configuration (`src/config/site.ts`)
 
 Aucune information sur l'entreprise n'est écrite ailleurs : en-tête, pied de page, bouton d'appel, pages légales, données structurées et formulaire lisent tous ce fichier.
+
+Une information encore inconnue s'écrit entre crochets, par exemple `anneesMetier: '[N]'` : le site affiche « [N] ans de métier » tel quel, comme un emplacement réservé, et la ligne porte un commentaire `TODO`. Il suffit de remplacer la valeur (`'30'`) pour que le texte définitif apparaisse partout.
 
 Pour retrouver tout ce qui reste à compléter :
 
@@ -95,14 +99,16 @@ Dans VS Code, une recherche de « TODO » dans `src/` donne le même résultat.
 | Bloc | À renseigner |
 |---|---|
 | `url` | Nom de domaine définitif, sans slash final (`https://www.exemple.fr`). Sert au sitemap, aux URL canoniques et au robots.txt. |
-| `entreprise` | Nom commercial, nom du gérant, forme juridique, capital social (société uniquement, sinon `''`), SIRET, immatriculation, TVA ou mention d'exonération. |
+| `entreprise` | Nom commercial, nom légal complet du gérant (`gerant`, pour les pages légales), nom d'usage (`gerantNomUsuel`, pour les textes de présentation), forme juridique, capital social (société uniquement, sinon `''`), SIRET, immatriculation, TVA ou mention d'exonération. |
+| `parcours` | Années de métier (`anneesMetier`, affiché « N ans de métier » dans le hero et sur `/a-propos/`), année d'installation à son compte (`anneeInstallation`) et une phrase du gérant sur son métier (`citation`, bandeau « Qui suis-je » de l'accueil). |
+| `delaiRappel` | Délai de rappel des demandes (`'24 h'`, avec une espace insécable) : hero, bandeau d'appel, pages service, contact, formulaire. |
 | `contact.telephone` | `affichage` (ex. `02 47 00 00 00`) et `lien` au format international sans espaces (ex. `+33247000000`), utilisé pour les liens `tel:`. |
 | `contact.email`, `contact.adresse` | Adresse e-mail et adresse postale. `region` vaut déjà `Centre-Val de Loire`. |
 | `horaires` | `plages` (voir l'exemple ci-dessous) et une `note` facultative. Laisser `note: ''` si inutile. |
 | `zone` | `libelle` (repris dans le H1 et les titres), département, liste des communes mises en avant. |
 | `assuranceDecennale` | Assureur, coordonnées, n° de contrat, zone couverte : informations affichées sur le site et dans les mentions légales. |
 | `certifications` | Qualifications **réellement détenues**. Le bloc « Qualifications » ne s'affiche que si le tableau n'est pas vide. |
-| `avis` | Avis **authentiques** uniquement. La section « Avis clients » ne s'affiche que si le tableau n'est pas vide. |
+| `avis` | Avis **authentiques** uniquement. Le premier est mis en avant en grande citation, les suivants en liste. Tant que le tableau est vide, la section est masquée en production ; en développement (`npm run dev`), un emplacement réservé montre sa place. |
 | `mediateur` | Médiateur de la consommation auquel l'entreprise adhère (obligatoire pour travailler avec des particuliers). |
 | `hebergeur` | Déjà rempli pour Vercel, sauf le téléphone : à vérifier. |
 | `donneesPersonnelles` | Prestataire du formulaire, durée de conservation, date de mise à jour de la politique de confidentialité. |
@@ -124,7 +130,7 @@ certifications: [{ nom: 'Nom exact de la qualification', organisme: 'Organisme',
 avis: [{ auteur: 'Prénom N.', commune: 'Tours', texte: "Texte de l'avis, recopié sans modification.", note: 5, date: '2026-01-15', source: 'Google' }],
 ```
 
-> **Règle absolue** : ne jamais inventer de certification, d'avis client, de chiffre ou d'années d'expérience. Une information non confirmée reste en TODO.
+> **Règle absolue** : ne jamais inventer de certification, d'avis client, de chiffre ou d'années d'expérience. Une information non confirmée reste entre crochets, avec son commentaire TODO.
 
 ## 4. Ajouter une réalisation
 
@@ -142,7 +148,6 @@ Chaque chantier est un fichier Markdown dans `src/content/realisations/`, qui ne
 | `service` | Identifiant du service lié : le nom d'un fichier de `src/content/services/`, sans `.md` (par exemple `tableau-electrique`). |
 | `couverture` | Photo principale : `src` (chemin **relatif au fichier**, par exemple `../../assets/realisations/amboise-tableau.jpg`) et `alt` (description de la photo). |
 | `photos` | Facultatif : photos supplémentaires, même format que `couverture`, dans l'ordre d'affichage. |
-| `exemple` | `false` pour un vrai chantier. `true` affiche un badge « Exemple ». |
 
 ```yaml
 ---
@@ -156,7 +161,6 @@ couverture:
 photos:
   - src: ../../assets/realisations/amboise-tableau-avant.jpg
     alt: Ancien tableau à fusibles avant les travaux
-exemple: false
 ---
 ```
 
@@ -164,11 +168,11 @@ exemple: false
 
 La réalisation apparaît automatiquement :
 
-- sur l'accueil (3 plus récentes) ;
+- sur l'accueil (les 2 plus récentes, sous l'avant/après) ;
 - dans la galerie `/realisations/`, avec un filtre par service ;
 - sur la page du service lié.
 
-> Les trois fichiers `exemple-*.md` sont des **chantiers fictifs** de démonstration. Il faut les supprimer dès que de vrais chantiers sont disponibles.
+Chaque carte porte l'étiquette de repérage de son service (« C2 · Rénovation »). Tant qu'aucun chantier n'est publié, l'accueil n'affiche que l'avant/après, et la galerie un court message. Le build affiche alors l'avertissement « The collection "realisations" does not exist or is empty » : il disparaît au premier chantier ajouté.
 
 ## 5. Ajouter un service
 
@@ -178,37 +182,38 @@ La réalisation apparaît automatiquement :
 | Champ | Description |
 |---|---|
 | `titre` | Nom du service, par exemple « Borne de recharge ». |
-| `description` | Phrase courte, **160 caractères maximum** : affichée sur les cartes et utilisée comme meta description. |
-| `icone` | Nom d'une icône de [`src/components/icons.ts`](src/components/icons.ts) : `maison-neuve`, `renovation`, `tableau`, `devis`, `assurance`, `norme`, `certification`… |
-| `ordre` | Position dans les listes (ordre croissant). |
-| `image` | Photo illustrant le service, chemin relatif au fichier (par exemple `../../assets/services/borne.jpg`). |
-| `imageAlt` | Description de la photo. |
+| `description` | Meta description pour les moteurs de recherche, **160 caractères maximum**. Elle n'est plus affichée sur les cartes. |
+| `resume` | Phrase courte, **140 caractères maximum** et **sans nom de ville**, dans les mots du client : affichée sur les cartes et en introduction de la page du service. |
+| `etiquette` | Libellé court de l'étiquette de repérage (24 caractères maximum), par exemple « Borne ». |
+| `ordre` | Position dans les listes (ordre croissant). Donne aussi le repère de l'étiquette : `ordre: 4` → « C4 ». |
+| `image` | Facultatif : photo illustrant le service, chemin relatif au fichier (par exemple `../../assets/services/borne.jpg`). Sans photo, un emplacement réservé affiche `imageAlt`. |
+| `imageAlt` | Description de la photo (ou de la photo attendue, tant qu'elle manque). |
 
 3. Rédiger le corps du texte en Markdown :
    - commencer les intertitres à `##`, car le titre principal (H1) est généré automatiquement ;
-   - viser 200 à 300 mots, orientés bénéfices client ;
-   - mentionner naturellement « électricien à Tours » et « Indre-et-Loire » ;
-   - sans promesse chiffrée.
+   - viser 200 à 300 mots, à la première personne, en partant des problèmes du client ;
+   - mentionner « Tours » et « Indre-et-Loire » une ou deux fois, pas à chaque paragraphe ;
+   - sans promesse chiffrée ni formule toute faite (« en toute transparence », « de A à Z »…).
 
 La page du service, les cartes, la liste du formulaire de contact et les filtres de la galerie se mettent à jour automatiquement.
 
-Pour une nouvelle icône, ajouter une entrée dans `src/components/icons.ts` : un tracé SVG sur une grille de 24 × 24, au trait. Pas d'éclair ni d'ampoule : c'est un parti pris de la direction artistique.
+Les services n'ont pas d'icône : leurs cartes portent une photo et une étiquette de repérage. Pour une nouvelle icône d'interface, ajouter une entrée dans `src/components/icons.ts` : un tracé SVG sur une grille de 24 × 24, au trait. Pas d'éclair ni d'ampoule : c'est un parti pris de la direction artistique.
 
 Typographie : en français, une espace insécable précède `: ; ? !`. Dans les fichiers Markdown, utiliser le caractère U+00A0 ou `&nbsp;`. Dans les fichiers `.astro`, utiliser `&nbsp;`.
 
-## 6. Remplacer les visuels provisoires
+## 6. Ajouter les photos
 
-Les visuels de `src/assets/placeholders/` sont des SVG neutres, sans texte. Ils ne sont **pas rastérisés** : Astro les sert tels quels, alors que les vraies photos JPG ou PNG seront converties en WebP.
+Tant qu'une photo manque, le composant `Photo` (`src/components/Photo.astro`) affiche à sa place un **emplacement réservé** : cadre en pointillés, mention « Photo à venir » et description de la photo attendue (son texte alternatif). La page garde ainsi sa mise en page définitive, et chaque emplacement indique quelle photo prendre.
 
-| Visuel | Où le remplacer |
+| Photo | Où la déclarer |
 |---|---|
-| Photo d'un service | Champ `image` du fichier du service. |
+| Hero de l'accueil, portrait (bandeau « Qui suis-je » et `/a-propos/`), avant/après d'un tableau | [`src/config/photos.ts`](src/config/photos.ts) : placer le JPG dans `src/assets/photos/`, l'importer en haut du fichier et le passer à `src` (marche à suivre en tête du fichier). |
+| Photo d'un service | Champ `image` du fichier du service (voir la section 5). |
 | Photos des chantiers | Fichiers de `src/content/realisations/` (voir la section 4). |
-| Portrait du gérant | Import `portrait` dans `src/pages/index.astro` et `src/pages/a-propos.astro`. Placer la photo (par exemple `src/assets/gerant.jpg`, format portrait 4:5) et modifier les deux imports. |
 | Image de partage (réseaux sociaux) | `src/assets/og-default.png`, à remplacer par une image de 1200 × 630 px. Pour un autre nom de fichier, modifier l'import dans `src/layouts/BaseLayout.astro`. |
 | Favicon | `public/favicon.svg`. |
 
-Toujours décrire la photo réelle dans le texte alternatif (`alt`, `imageAlt`).
+Conseils de prise de vue : lumière naturelle, sans flash ; le gérant au travail plutôt que posé ; pour l'avant/après, le même cadrage pris du même endroit ; rien qui identifie un client (visage, adresse, plaque). Toujours décrire la photo réelle dans le texte alternatif (`alt`, `imageAlt`).
 
 ## 7. Configurer le formulaire de contact
 
@@ -267,24 +272,32 @@ Aucun adaptateur n'est nécessaire : le site est entièrement statique.
 
 ## 9. Qualité, performance et accessibilité
 
-**Mesures Lighthouse** (mobile, version 13, build de production servi en local) : **100 / 100 / 100 / 100** en performance, accessibilité, bonnes pratiques et SEO, sur les 8 pages principales. Métriques relevées : LCP de 1,1 à 1,8 s, CLS 0, TBT 0 ms. Pendant cette mesure, `site.url` pointait vers le serveur local ; avec le domaine TODO, l'audit « canonical » échoue forcément.
+**Mesures Lighthouse** (mobile, version 13, build de production servi en local) : **100 / 100 / 100 / 100** en performance, accessibilité, bonnes pratiques et SEO, sur les 8 pages principales. Métriques relevées : LCP de 1,1 à 1,8 s, CLS 0, TBT 0 ms. Ces mesures datent d'avant la refonte de l'accueil (photos, étiquettes) : à refaire une fois les vraies photos en place. Pendant la mesure, `site.url` pointait vers le serveur local ; avec le domaine provisoire, l'audit « canonical » échoue forcément.
 
 **Performance**
 
-- Aucun JavaScript en dehors du script du menu mobile, en ligne et d'environ 1 ko, et des deux îles React : galerie (`client:visible`) et formulaire (`client:visible`).
+- Aucun JavaScript en dehors de deux scripts en ligne (menu mobile, environ 1 ko ; barre d'appel mobile, quelques lignes) et des deux îles React : galerie (`client:visible`) et formulaire (`client:visible`).
 - CSS intégré à chaque page (environ 6 ko compressé).
-- Polices préchargées : sous-ensemble latin, graisses 400 et 700.
+- Polices préchargées : sous-ensemble latin, Bitter 700, Public Sans 400 et 600, IBM Plex Mono 500.
 - Images optimisées par Astro, avec `srcset` et `sizes`.
 
 **Accessibilité (WCAG AA)**
 
 - Lien « Aller au contenu ».
-- Focus visible : contour anthracite sur fond clair, ambre sur fond sombre.
+- Focus visible : contour cuivre sur fond clair, cuivre-clair sur fond ardoise.
 - Hiérarchie de titres respectée.
 - Menu burger avec `aria-expanded`, fermeture par Échap et retour du focus au bouton.
+- Barre d'appel mobile masquée (et retirée de la navigation clavier) tant que le bouton d'appel du hero est visible ; sans JavaScript, elle reste affichée.
 - Visionneuse en `<dialog>` natif.
 - `prefers-reduced-motion` respecté.
-- Contrastes vérifiés : anthracite sur fond 15,1:1, texte secondaire 6,1:1, anthracite sur ambre 7,3:1. L'ambre n'est jamais utilisé pour du texte sur fond clair.
+- Contrastes vérifiés :
+  - ardoise sur tuffeau 9,8:1 ;
+  - cuivre sur tuffeau 4,8:1, et tuffeau sur cuivre (boutons) 4,8:1, puis 6,5:1 sur cuivre-fonce au survol ;
+  - gris-ardoise sur tuffeau 4,8:1 ;
+  - sur fond ardoise : sable 6,7:1 et cuivre-clair 4,7:1 ; sable sur ardoise-clair 5,4:1 (emplacements photo).
+- Règles de couleur du texte :
+  - le cuivre n'est jamais utilisé pour du texte sur fond ardoise ;
+  - le cuivre-clair n'est jamais utilisé pour du texte sur ardoise-clair (3,8:1).
 
 **SEO local**
 
@@ -302,21 +315,33 @@ Aucun adaptateur n'est nécessaire : le site est entièrement statique.
   - ne jamais imposer `format` à `<Image />` ou `getImage()` sur une image de contenu : un SVG ferait échouer le build, alors que le format par défaut convient (SVG conservé, JPG et PNG convertis en WebP) ;
   - `image.layout: 'constrained'` génère `srcset` et `sizes` ;
   - `responsiveStyles` reste désactivé, car sa couche CSS passerait devant les classes Tailwind.
-- **Tailwind 4** : jetons définis dans `@theme` (`src/styles/global.css`). La palette par défaut est désactivée : seules les couleurs du site existent (`paper`, `ink`, `muted`, `accent`…).
+- **Tailwind 4** : jetons définis dans `@theme` (`src/styles/global.css`).
+  - La palette par défaut est désactivée : seules les couleurs du site existent (`ardoise`, `ardoise-clair`, `tuffeau`, `tuffeau-clair`, `cuivre`, `cuivre-fonce`, `cuivre-clair`, `gris-ardoise`, `sable`, `bordure`).
+  - Deux arrondis seulement : `rounded-conteneur` (cartes, photos, encarts) et `rounded-controle` (boutons, champs, filtres, étiquettes). Les autres (`rounded-lg`…) n'existent plus.
+  - Signature graphique : l'**étiquette de repérage** (`src/components/Etiquette.astro`, classes `etiquette` et `etiquette-repere`), inspirée des étiquettes d'un tableau électrique : repère des services (C1, C2, C3, tiré du champ `ordre`), département dans le hero, avant/après. Au plus une étiquette, ou une série cohérente, par section.
+  - Le filet cuivre (`filet`) est réservé au H1 ; le losange ne sert plus qu'aux puces des listes de texte (`prose-content`).
+  - Mise en page de l'accueil : une seule grille de trois éléments (les services), une rupture pleine largeur au milieu (bande ardoise portée par la photo), pas d'alternance de fonds tuffeau / tuffeau-clair.
 - **Compilateur Rust** : le HTML doit être valide (balises fermées, pas de bloc dans un `<p>`).
 
 ## 11. TODO à compléter avec le client
 
+Déjà renseignés : nom commercial, dirigeant, forme juridique, SIRET, mention de TVA, téléphone, adresse et délai de rappel (24 h).
+
+**Parcours** (`src/config/site.ts`, bloc `parcours`)
+
+- Nombre d'années de métier (électricien depuis très jeune).
+- Année d'installation à son compte (« bientôt 2 ans » en septembre 2026).
+- Une phrase du gérant sur son métier, recopiée telle quelle.
+
 **Identité et mentions légales** (`src/config/site.ts`)
 
-- Nom commercial, nom du gérant, forme juridique, capital social (société uniquement).
-- SIRET, immatriculation, n° de TVA ou mention d'exonération.
+- Immatriculation (registre indiqué sur l'extrait RNE ou l'avis de situation Sirene).
 - Médiateur de la consommation : nom, adresse, site.
 - Téléphone de l'hébergeur Vercel (à vérifier).
 
 **Contact et zone** (`src/config/site.ts`)
 
-- Téléphone (format affiché et format international), e-mail, adresse.
+- Adresse e-mail.
 - Horaires.
 - Confirmation de la liste des communes mises en avant.
 - Liens vers les profils officiels (`reseaux`).
@@ -329,10 +354,10 @@ Aucun adaptateur n'est nécessaire : le site est entièrement statique.
 
 **Contenus**
 
-- Présentation du gérant : bloc « Qui suis-je » de l'accueil et section « Mon parcours » de `/a-propos/`.
+- Section « Mon parcours » de `/a-propos/` : formation et motivation, entre crochets dans `src/pages/a-propos.astro`.
 - Étapes « Comment se déroule un chantier » à valider (`src/pages/a-propos.astro`).
-- Photos : services, portrait du gérant, vrais chantiers.
-- Suppression des 3 réalisations d'exemple.
+- Photos : hero, portrait, avant/après et commune du chantier (`src/config/photos.ts`), photos des 3 services.
+- Premiers vrais chantiers, au moins deux (voir la section 4).
 - Relecture des textes des services.
 - Crédits photos (`src/pages/mentions-legales.astro`).
 

@@ -1,31 +1,47 @@
 @import 'tailwindcss';
 
 /*
- * Jetons de design. La palette par défaut de Tailwind est désactivée : seules ces
- * couleurs existent (bg-paper, text-ink, border-line…).
+ * Palette « Tuffeau & Cuivre ». La palette par défaut de Tailwind est désactivée :
+ * seules ces couleurs existent (bg-tuffeau, text-ardoise, border-bordure…).
  *
  * Contrastes vérifiés (WCAG AA) :
- *   ink sur paper 15,1:1 · muted sur paper 6,1:1 · ink sur accent 7,3:1
- *   ink sur accent-strong 5,7:1 · mist sur ink 8,3:1 · danger sur blanc 6,6:1
- *   field (bordure des champs) sur blanc 3,9:1
- * L'ambre (accent) n'est jamais utilisé pour du texte sur fond clair (2,1:1).
+ *   ardoise sur tuffeau 9,8:1 · ardoise sur tuffeau-clair 11,0:1
+ *   cuivre sur tuffeau 4,8:1 · cuivre sur tuffeau-clair 5,4:1 · tuffeau sur cuivre 4,8:1
+ *   tuffeau sur cuivre-fonce 6,5:1 (survol des boutons pleins)
+ *   gris-ardoise sur tuffeau 4,8:1 · gris-ardoise sur tuffeau-clair 5,4:1
+ *   tuffeau sur ardoise 9,8:1 · sable sur ardoise 6,7:1 · cuivre-clair sur ardoise 4,7:1
+ *   sable sur ardoise-clair 5,4:1 (emplacements photo sur fond ardoise)
+ * Règles : texte cuivre uniquement sur tuffeau ou tuffeau-clair, jamais sur ardoise ;
+ * sur ardoise, texte tuffeau, sable ou cuivre-clair (cuivre-clair jamais sur ardoise-clair : 3,8:1).
  */
 @theme {
   --color-*: initial;
-  --color-white: #ffffff;
-  --color-paper: #fafaf7;
-  --color-paper-deep: #f1f1ec;
-  --color-line: #e3e3dc;
-  --color-field: #7b828b;
-  --color-muted: #57606a;
-  --color-ink: #1f2328;
-  --color-ink-soft: #2b3036;
-  --color-mist: #b7bdc4;
-  --color-accent: #e8a317;
-  --color-accent-strong: #d18f0c;
-  --color-danger: #b42318;
+  --color-ardoise: #2e3a40;
+  --color-ardoise-clair: #3a4850;
+  --color-tuffeau: #efebe3;
+  --color-tuffeau-clair: #faf8f3;
+  --color-cuivre: #9c522d;
+  --color-cuivre-fonce: #7f4222;
+  --color-cuivre-clair: #d9956a;
+  --color-gris-ardoise: #5e686e;
+  --color-sable: #c9c4b8;
+  --color-bordure: #cfc7b8;
 
-  --font-sans: 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  /*
+   * Textes (400) et boutons ou libellés (600) : Public Sans. Titres et logotype (700) : Bitter.
+   * Étiquettes de repérage (500) : IBM Plex Mono.
+   */
+  --font-sans: 'Public Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-titre: 'Bitter', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+
+  /*
+   * Deux arrondis seulement : rounded-conteneur (cartes, photos, encarts) et
+   * rounded-controle (boutons, champs, filtres, étiquettes).
+   */
+  --radius-*: initial;
+  --radius-conteneur: 0.5rem;
+  --radius-controle: 0.25rem;
 }
 
 @layer base {
@@ -35,28 +51,30 @@
   }
 
   body {
-    @apply bg-paper font-sans text-ink antialiased;
+    @apply bg-tuffeau font-sans text-ardoise antialiased;
   }
 
   h1,
   h2,
-  h3 {
+  h3,
+  h4 {
+    font-family: var(--font-titre);
     text-wrap: balance;
   }
 
   ::selection {
-    background-color: var(--color-accent);
-    color: var(--color-ink);
+    background-color: var(--color-cuivre);
+    color: var(--color-tuffeau);
   }
 
-  /* Focus visible : contour anthracite sur fond clair, ambre sur fond sombre. */
+  /* Focus visible : contour cuivre sur fond clair, cuivre-clair sur fond ardoise. */
   :focus-visible {
-    outline: 2px solid var(--color-ink);
+    outline: 2px solid var(--color-cuivre);
     outline-offset: 3px;
   }
 
   .surface-dark :focus-visible {
-    outline-color: var(--color-accent);
+    outline-color: var(--color-cuivre-clair);
   }
 
   /* Le contenu principal reçoit le focus via le lien d'évitement : pas de contour sur ce grand bloc. */
@@ -98,44 +116,79 @@
   }
 
   .skip-link {
-    @apply sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-ink focus:px-4 focus:py-3 focus:font-bold focus:text-paper;
+    @apply sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-controle focus:bg-tuffeau focus:px-4 focus:py-3 focus:font-semibold focus:text-ardoise;
   }
 
-  .eyebrow {
-    @apply flex items-center gap-2 text-sm font-bold tracking-wide text-muted uppercase;
-  }
-
-  .eyebrow::before {
+  /* Filet cuivre court (64 × 3 px), réservé au H1. */
+  .filet::after {
     content: '';
-    @apply size-2 shrink-0 rounded-full bg-accent;
+    @apply mt-4 block h-[3px] w-16 bg-cuivre;
   }
 
-  .surface-dark .eyebrow {
-    @apply text-mist;
+  .surface-dark .filet::after {
+    @apply bg-cuivre-clair;
+  }
+
+  /*
+   * Signature : étiquette de repérage, comme celles collées sous les disjoncteurs d'un
+   * tableau électrique. Un repère sur fond plein (C1, C2, 37, Avant…), puis un libellé
+   * facultatif. Au plus une étiquette, ou une série cohérente, par section.
+   */
+  .etiquette {
+    @apply inline-flex items-stretch overflow-hidden rounded-controle border border-ardoise bg-tuffeau-clair font-mono text-[0.8125rem] leading-none font-medium tracking-wide text-ardoise uppercase;
+  }
+
+  .etiquette > * {
+    @apply px-2 py-1.5;
+  }
+
+  .etiquette-repere {
+    @apply bg-ardoise text-tuffeau;
+  }
+
+  .surface-dark .etiquette {
+    @apply border-sable bg-ardoise text-tuffeau;
+  }
+
+  .surface-dark .etiquette-repere {
+    @apply bg-tuffeau text-ardoise;
+  }
+
+  /* Emplacement d'une photo pas encore fournie : sa description sert de consigne de prise de vue. */
+  .photo-a-venir {
+    @apply flex flex-col items-center justify-center gap-1.5 bg-tuffeau p-8 text-center text-sm text-gris-ardoise;
+    outline: 1px dashed var(--color-gris-ardoise);
+    outline-offset: -0.75rem;
+    background-image: repeating-linear-gradient(-45deg, transparent 0 11px, rgb(46 58 64 / 0.05) 11px 12px);
+  }
+
+  .surface-dark .photo-a-venir {
+    @apply bg-ardoise-clair text-sable;
+    outline-color: var(--color-sable);
+    background-image: repeating-linear-gradient(-45deg, transparent 0 11px, rgb(239 235 227 / 0.06) 11px 12px);
   }
 
   .btn {
-    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-lg px-5 py-3 text-center text-base leading-tight font-bold transition-colors;
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-controle px-5 py-3 text-center text-base leading-tight font-semibold decoration-2 underline-offset-4 transition-colors;
   }
 
+  /* Un seul bouton plein par groupe : « Appeler », fond cuivre, sur fond clair comme sur ardoise. */
   .btn-primary {
-    @apply bg-accent text-ink hover:bg-accent-strong;
+    @apply bg-cuivre text-tuffeau hover:bg-cuivre-fonce hover:underline;
   }
 
+  /* Bouton secondaire sur fond clair. */
   .btn-secondary {
-    @apply border-2 border-ink text-ink hover:bg-ink hover:text-paper;
+    @apply border-2 border-cuivre text-cuivre hover:bg-cuivre hover:text-tuffeau;
   }
 
+  /* Bouton secondaire sur fond ardoise. */
   .btn-outline-light {
-    @apply border-2 border-paper text-paper hover:bg-paper hover:text-ink;
-  }
-
-  .badge {
-    @apply rounded-md bg-ink px-2.5 py-1 text-xs font-bold tracking-wide text-paper uppercase;
+    @apply border-2 border-tuffeau text-tuffeau hover:bg-tuffeau hover:text-ardoise;
   }
 
   .field {
-    @apply block w-full rounded-lg border border-field bg-white px-4 py-3 text-base text-ink aria-[invalid=true]:border-2 aria-[invalid=true]:border-danger;
+    @apply block w-full rounded-controle border border-gris-ardoise bg-tuffeau-clair px-4 py-3 text-base text-ardoise aria-[invalid=true]:border-2 aria-[invalid=true]:border-cuivre;
   }
 
   /* Texte long : corps des services (Markdown) et pages légales. */
@@ -165,23 +218,24 @@
   }
 
   .prose-content ol {
-    @apply list-decimal pl-6;
+    @apply list-decimal pl-6 marker:font-semibold marker:text-cuivre;
   }
 
+  /* Seul usage restant du losange : les puces des listes de texte. */
   .prose-content ul > li {
     @apply relative pl-6;
   }
 
   .prose-content ul > li::before {
     content: '';
-    @apply absolute top-[0.7em] left-1 size-2 rounded-full bg-accent;
+    @apply absolute top-[0.65em] left-1 size-2 rotate-45 bg-cuivre;
   }
 
   .prose-content a {
-    @apply font-bold underline decoration-2 underline-offset-2 hover:decoration-accent;
+    @apply font-semibold text-cuivre underline decoration-1 underline-offset-2 hover:decoration-2;
   }
 
   .prose-content strong {
-    @apply font-bold;
+    @apply font-semibold;
   }
 }

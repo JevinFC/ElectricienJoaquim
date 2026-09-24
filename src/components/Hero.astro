@@ -1,41 +1,48 @@
 ---
-import CircuitPattern from './CircuitPattern.astro';
+import Etiquette from './Etiquette.astro';
 import Icon from './Icon.astro';
+import Photo from './Photo.astro';
+import { photos } from '../config/photos.ts';
 import { site } from '../config/site.ts';
 
-const { telephone } = site.contact;
-const { zone } = site;
-const reassurance = ['Devis gratuit', 'Assurance décennale', 'Norme NF C 15-100'];
+const { entreprise, contact, zone, parcours, delaiRappel } = site;
+const { telephone } = contact;
+// Preuves propres à l'entreprise, à la place des arguments communs à tous les électriciens.
+const preuves = [`${parcours.anneesMetier} ans de métier`, `Rappel sous ${delaiRappel}`, 'Devis gratuit et détaillé'];
 ---
 
-<section class="relative isolate overflow-hidden border-b border-line">
-  <CircuitPattern variant="hero" class="absolute inset-0 -z-10 size-full text-ink" />
-  <div class="container-page py-16 sm:py-24 lg:py-28">
-    <p class="eyebrow">Artisan électricien · {zone.departement} ({zone.numeroDepartement})</p>
-    <h1 class="mt-5 max-w-3xl text-4xl leading-[1.1] font-bold tracking-tight sm:text-5xl lg:text-6xl">
-      Électricien {zone.libelle}
-    </h1>
-    <p class="mt-6 max-w-2xl text-lg text-muted sm:text-xl">
-      Installation électrique neuve, rénovation et mise aux normes de tableaux électriques. Un seul interlocuteur, du
-      devis à la mise en service.
-    </p>
-    <div class="mt-10 flex flex-col gap-3 sm:flex-row">
-      <a href={`tel:${telephone.lien}`} class="btn btn-primary">
-        <Icon name="telephone" class="size-5" />
-        <span>Appeler</span>
-        <span class="font-normal">{telephone.affichage}</span>
-      </a>
-      <a href="/contact/" class="btn btn-secondary">Demander un devis</a>
+<!-- Prolonge l'en-tête ardoise ; le filet cuivre de 3 px marque la transition vers le contenu. -->
+<section class="surface-dark border-b-[3px] border-cuivre bg-ardoise text-tuffeau">
+  <div
+    class="container-page grid items-center gap-12 pt-10 pb-14 sm:pt-16 sm:pb-20 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-16 lg:pt-20 lg:pb-24"
+  >
+    <div>
+      <Etiquette repere={zone.numeroDepartement} texte={`${contact.adresse.ville} · ${zone.departement}`} />
+      <h1 class="filet mt-6 text-4xl leading-[1.1] font-bold sm:text-5xl lg:text-6xl">
+        {entreprise.gerantNomUsuel}, électricien à {contact.adresse.ville}
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg text-sable sm:text-xl">
+        Je travaille seul&nbsp;: c'est moi qui fais le devis, moi qui tire les câbles, et moi qui décroche quand vous
+        appelez.
+      </p>
+      <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+        <a href={`tel:${telephone.lien}`} class="btn btn-primary" data-appel-principal>
+          <Icon name="telephone" class="size-5" />
+          <span>Appeler</span>
+          <span class="font-normal">{telephone.affichage}</span>
+        </a>
+        <a href="/contact/" class="btn btn-outline-light">Demander un devis</a>
+      </div>
+      <!-- Point médian collé au mot précédent : une coupure de ligne ne laisse jamais de séparateur en tête de ligne. -->
+      <p class="mt-8 text-sm leading-relaxed font-semibold text-sable">{preuves.join(' · ')}</p>
     </div>
-    <ul class="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm font-bold">
-      {
-        reassurance.map((point) => (
-          <li class="flex items-center gap-2">
-            <Icon name="coche" class="size-5" />
-            {point}
-          </li>
-        ))
-      }
-    </ul>
+    <Photo
+      {...photos.hero}
+      width={768}
+      height={960}
+      sizes="(min-width: 1024px) 384px, 100vw"
+      priority
+      class="aspect-4/3 w-full rounded-conteneur sm:aspect-16/10 lg:aspect-4/5"
+    />
   </div>
 </section>

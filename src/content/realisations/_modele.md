@@ -14,5 +14,4 @@ couverture: # photo principale, affichée sur les cartes
 photos: # facultatif : photos supplémentaires, dans l'ordre d'affichage
   - src: ../../assets/realisations/amboise-tableau-avant.jpg
     alt: Ancien tableau à fusibles avant les travaux
-exemple: false # true uniquement pour un chantier fictif de démonstration
 ---

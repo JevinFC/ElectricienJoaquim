@@ -12,7 +12,7 @@ const estUrl = (valeur: string) => valeur.startsWith('http');
   title="Mentions légales"
   description={`Mentions légales du site ${entreprise.nom} : éditeur, hébergeur, assurance professionnelle et médiation de la consommation.`}
 >
-  <PageHeader fil={[{ href: '/', label: 'Accueil' }]} eyebrow="Informations légales" titre="Mentions légales" />
+  <PageHeader fil={[{ href: '/', label: 'Accueil' }]} titre="Mentions légales" />
 
   <div class="container-page py-14 sm:py-20">
     <div class="prose-content">
@@ -65,8 +65,12 @@ const estUrl = (valeur: string) => valeur.startsWith('http');
         Les contenus de ce site (textes, photographies, logotype, mise en page) sont la propriété de {entreprise.nom},
         sauf mention contraire. Toute reproduction, même partielle, est interdite sans autorisation écrite préalable.
       </p>
-      <p>Police de caractères&nbsp;: Manrope, distribuée sous licence SIL Open Font License 1.1 et hébergée sur ce site.</p>
-      <p>Crédits photos&nbsp;: TODO.</p>
+      <p>
+        Polices de caractères&nbsp;: Bitter, Public Sans et IBM Plex Mono, distribuées sous licence SIL Open Font License
+        1.1 et hébergées sur ce site.
+      </p>
+      {/* TODO : auteur des photos, une fois les vraies photos en place. */}
+      <p>Crédits photos&nbsp;: [auteur des photos].</p>
 
       <h2>Données personnelles</h2>
       <p>

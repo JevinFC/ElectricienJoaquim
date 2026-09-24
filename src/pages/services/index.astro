@@ -2,7 +2,6 @@
 import CtaBanner from '../../components/CtaBanner.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import ServiceCard from '../../components/ServiceCard.astro';
-import TrustSection from '../../components/TrustSection.astro';
 import { site } from '../../config/site.ts';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getServices } from '../../lib/collections.ts';
@@ -18,7 +17,6 @@ const { zone } = site;
   <PageHeader
     fil={[{ href: '/', label: 'Accueil' }]}
     filCourant="Services"
-    eyebrow="Services"
     titre={`Services d'électricité ${zone.libelle}`}
     intro="De la maison neuve à la mise en sécurité d'un logement ancien, je réalise vos travaux électriques selon la norme NF C 15-100."
   />
@@ -37,6 +35,5 @@ const { zone } = site;
     </div>
   </section>
 
-  <TrustSection />
   <CtaBanner />
 </BaseLayout>

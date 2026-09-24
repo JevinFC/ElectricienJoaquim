@@ -1,21 +1,22 @@
 ---
-import { Image } from 'astro:assets';
-import portrait from '../assets/placeholders/gerant.svg';
+import AvantApres from '../components/AvantApres.astro';
 import CtaBanner from '../components/CtaBanner.astro';
 import Hero from '../components/Hero.astro';
 import Icon from '../components/Icon.astro';
+import Photo from '../components/Photo.astro';
 import RealisationCard from '../components/RealisationCard.astro';
 import ReviewsSection from '../components/ReviewsSection.astro';
 import ServiceCard from '../components/ServiceCard.astro';
-import TrustSection from '../components/TrustSection.astro';
 import ZoneSection from '../components/ZoneSection.astro';
+import { photos } from '../config/photos.ts';
 import { site } from '../config/site.ts';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getRealisations, getServices, titreService } from '../lib/collections.ts';
+import { getRealisations, getServices, serviceParId } from '../lib/collections.ts';
 
 const services = await getServices();
-const dernieresRealisations = (await getRealisations()).slice(0, 3);
-const { entreprise, zone } = site;
+// Deux chantiers au plus : la seule grille de trois éléments de la page reste celle des services.
+const derniersChantiers = (await getRealisations()).slice(0, 2);
+const { contact, parcours, zone } = site;
 ---
 
 <BaseLayout
@@ -26,16 +27,9 @@ const { entreprise, zone } = site;
 
   <section class="py-16 sm:py-24" aria-labelledby="services-titre">
     <div class="container-page">
-      <p class="eyebrow">Services</p>
-      <div class="mt-3 flex flex-wrap items-end justify-between gap-4">
-        <h2 id="services-titre" class="max-w-2xl text-3xl leading-tight font-bold sm:text-4xl">
-          Installation, rénovation et mise aux normes
-        </h2>
-        <a href="/services/" class="inline-flex items-center gap-2 font-bold underline-offset-4 hover:underline">
-          Tous les services
-          <Icon name="fleche" class="size-5" />
-        </a>
-      </div>
+      <h2 id="services-titre" class="max-w-2xl text-3xl leading-tight font-bold sm:text-4xl">
+        Installation, rénovation et mise aux normes
+      </h2>
       <ul class="mt-10 grid gap-6 md:grid-cols-3">
         {
           services.map((service) => (
@@ -45,59 +39,71 @@ const { entreprise, zone } = site;
           ))
         }
       </ul>
+      <a
+        href="/services/"
+        class="mt-8 inline-flex items-center gap-2 font-semibold text-cuivre underline-offset-4 hover:underline"
+      >
+        Tous les services
+        <Icon name="fleche" class="size-5" />
+      </a>
     </div>
   </section>
 
-  <TrustSection />
+  <!-- Rupture au milieu de la page : bande ardoise pleine largeur, portée par la photo. -->
+  <section class="surface-dark bg-ardoise text-tuffeau" aria-labelledby="presentation-titre">
+    <div class="grid lg:grid-cols-2">
+      <Photo
+        {...photos.portrait}
+        width={960}
+        height={1080}
+        sizes="(min-width: 1024px) 50vw, 100vw"
+        class="aspect-4/3 w-full sm:aspect-16/9 lg:aspect-auto lg:h-full lg:min-h-[34rem]"
+      />
+      <div class="px-4 py-16 sm:px-6 lg:py-24 lg:pr-[max(2rem,calc((100vw_-_72rem)/2_+_2rem))] lg:pl-16">
+        <h2 id="presentation-titre" class="max-w-md text-3xl leading-tight font-bold sm:text-4xl">
+          Je n'ai jamais fait d'autre métier
+        </h2>
+        <p class="mt-6 max-w-xl text-lg text-sable">
+          J'ai commencé l'électricité très jeune. Depuis {parcours.anneeInstallation}, je travaille à mon compte à
+          {contact.adresse.ville}, chez les particuliers&nbsp;: installations neuves, rénovations et tableaux électriques.
+        </p>
+        <blockquote class="mt-8 max-w-xl border-l-[3px] border-cuivre-clair pl-5 font-titre text-xl leading-snug">
+          <p>«&nbsp;{parcours.citation}&nbsp;»</p>
+        </blockquote>
+        <a href="/a-propos/" class="btn btn-outline-light mt-10">Mon parcours</a>
+      </div>
+    </div>
+  </section>
 
-  {
-    dernieresRealisations.length > 0 && (
-      <section class="py-16 sm:py-24" aria-labelledby="realisations-titre">
-        <div class="container-page">
-          <p class="eyebrow">Réalisations</p>
-          <div class="mt-3 flex flex-wrap items-end justify-between gap-4">
-            <h2 id="realisations-titre" class="text-3xl leading-tight font-bold sm:text-4xl">
-              Derniers chantiers
-            </h2>
-            <a href="/realisations/" class="inline-flex items-center gap-2 font-bold underline-offset-4 hover:underline">
+  <section class="py-16 sm:py-24" aria-labelledby="realisations-titre">
+    <div class="container-page">
+      <h2 id="realisations-titre" class="text-3xl leading-tight font-bold sm:text-4xl">Avant, après</h2>
+      <AvantApres class="mt-10" />
+      {
+        derniersChantiers.length > 0 && (
+          <div class="mt-16 border-t border-bordure pt-12">
+            <h3 class="text-2xl leading-tight font-bold">Derniers chantiers</h3>
+            <ul class="mt-8 grid gap-6 sm:grid-cols-2">
+              {derniersChantiers.map((realisation) => (
+                <li>
+                  <RealisationCard
+                    realisation={realisation}
+                    service={serviceParId(services, realisation.data.service.id)}
+                    headingLevel={4}
+                  />
+                </li>
+              ))}
+            </ul>
+            <a
+              href="/realisations/"
+              class="mt-8 inline-flex items-center gap-2 font-semibold text-cuivre underline-offset-4 hover:underline"
+            >
               Toutes les réalisations
               <Icon name="fleche" class="size-5" />
             </a>
           </div>
-          <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {dernieresRealisations.map((realisation) => (
-              <li>
-                <RealisationCard realisation={realisation} service={titreService(services, realisation.data.service.id)} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-    )
-  }
-
-  <section class="border-t border-line bg-paper-deep" aria-labelledby="presentation-titre">
-    <div class="container-page grid items-center gap-10 py-16 sm:py-24 md:grid-cols-[2fr_3fr] lg:gap-16">
-      <Image
-        src={portrait}
-        alt={`Portrait de ${entreprise.gerant}`}
-        width={480}
-        height={600}
-        sizes="(min-width: 768px) 40vw, 100vw"
-        class="aspect-4/5 w-full max-w-sm rounded-xl object-cover"
-      />
-      <div>
-        <p class="eyebrow">À propos</p>
-        <h2 id="presentation-titre" class="mt-3 text-3xl leading-tight font-bold sm:text-4xl">Qui suis-je&nbsp;?</h2>
-        <p class="mt-4 text-lg">
-          Je suis {entreprise.gerant}, électricien à mon compte. J'interviens {zone.libelle} chez les particuliers, de
-          l'installation neuve à la mise aux normes.
-        </p>
-        <p class="mt-4 text-muted">
-          TODO : deux ou trois phrases de présentation à rédiger avec le client (parcours, façon de travailler).
-        </p>
-        <a href="/a-propos/" class="btn btn-secondary mt-8">En savoir plus</a>
-      </div>
+        )
+      }
     </div>
   </section>
 

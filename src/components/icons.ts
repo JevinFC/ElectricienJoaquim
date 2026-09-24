@@ -4,18 +4,10 @@
  * contenu interne d'un <svg viewBox="0 0 24 24">, rendu par <Icon name="…" />.
  *
  * Pour ajouter une icône : ajouter une entrée ci-dessous. Son nom devient
- * utilisable dans <Icon /> et dans le champ `icone` des services.
+ * utilisable dans <Icon />. Les services n'ont pas d'icône : leurs cartes
+ * portent une photo et une étiquette de repérage.
  */
 export const icons = {
-  // Maison et prise : installation électrique neuve.
-  'maison-neuve':
-    '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9v11h14V9"/><circle cx="12" cy="14.5" r="3"/><circle cx="10.9" cy="14.5" r=".55" fill="currentColor" stroke="none"/><circle cx="13.1" cy="14.5" r=".55" fill="currentColor" stroke="none"/>',
-  // Maison et flèche circulaire : rénovation.
-  renovation:
-    '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9v11h14V9"/><path d="M15 15a3 3 0 1 1-1.5-2.6"/><path d="m13.3 11.2.5 1.4-1.5.3"/>',
-  // Coffret, rangée de disjoncteurs et bornier : tableau électrique.
-  tableau:
-    '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 7.5h16"/><rect x="6.5" y="10" width="2.2" height="5" rx=".5"/><rect x="10.9" y="10" width="2.2" height="5" rx=".5"/><rect x="15.3" y="10" width="2.2" height="5" rx=".5"/><path d="M7 18h10"/>',
   telephone: '<rect x="7" y="2.5" width="10" height="19" rx="2.2"/><path d="M11 18.5h2"/>',
   email: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/>',
   localisation:

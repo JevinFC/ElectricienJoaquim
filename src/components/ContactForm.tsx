@@ -15,6 +15,8 @@ interface Props {
   communes: string[];
   telephone: { affichage: string; lien: string };
   email: string;
+  /** Délai de rappel annoncé après l'envoi, par exemple « 24 h ». */
+  delaiRappel: string;
   entreprise: string;
   /** URL de la politique de confidentialité. */
   confidentialite: string;
@@ -74,6 +76,7 @@ export default function ContactForm({
   communes,
   telephone,
   email,
+  delaiRappel,
   entreprise,
   confidentialite,
 }: Props) {
@@ -171,25 +174,25 @@ export default function ContactForm({
 
   const messageErreur = (champ: Champ): ReactNode =>
     erreurs[champ] ? (
-      <p id={`cf-${champ}-erreur`} className="mt-2 text-sm font-bold text-danger">
+      <p id={`cf-${champ}-erreur`} className="mt-2 text-sm font-semibold text-cuivre">
         {erreurs[champ]}
       </p>
     ) : null;
 
   const lienTelephone = (
-    <a href={`tel:${telephone.lien}`} className="font-bold whitespace-nowrap underline">
+    <a href={`tel:${telephone.lien}`} className="font-semibold whitespace-nowrap text-cuivre underline">
       {telephone.affichage}
     </a>
   );
 
   if (statut === 'succes') {
     return (
-      <div role="status" className="rounded-xl border border-line bg-white p-6 sm:p-8">
-        <p ref={succesRef} tabIndex={-1} className="text-2xl font-bold">
+      <div role="status" className="rounded-conteneur border border-bordure bg-tuffeau-clair p-6 sm:p-8">
+        <p ref={succesRef} tabIndex={-1} className="font-titre text-2xl font-bold">
           Merci, votre demande a bien été envoyée.
         </p>
-        <p className="mt-3 text-muted">
-          Je vous recontacte dès que possible. Pour une question urgente, appelez le {lienTelephone}.
+        <p className="mt-3 text-gris-ardoise">
+          Je vous rappelle sous {delaiRappel}. Pour une question urgente, appelez le {lienTelephone}.
         </p>
       </div>
     );
@@ -206,20 +209,20 @@ export default function ContactForm({
       className="relative space-y-6"
     >
       {!configure && (
-        <p className="rounded-lg border border-line bg-paper-deep p-4 text-sm">
+        <p className="rounded-conteneur border border-bordure bg-tuffeau p-4 text-sm">
           L'envoi en ligne n'est pas encore activé. En attendant, appelez le {lienTelephone} ou écrivez à{' '}
-          <a href={`mailto:${email}`} className="font-bold break-all underline">
+          <a href={`mailto:${email}`} className="font-semibold break-all text-cuivre underline">
             {email}
           </a>
           .
         </p>
       )}
 
-      <p className="text-sm text-muted">Les champs marqués d'un astérisque (*) sont obligatoires.</p>
+      <p className="text-sm text-gris-ardoise">Les champs marqués d'un astérisque (*) sont obligatoires.</p>
 
       <div className="grid gap-6 sm:grid-cols-2">
         <div>
-          <label htmlFor="cf-nom" className="block font-bold">
+          <label htmlFor="cf-nom" className="block font-semibold">
             Nom <span aria-hidden="true">*</span>
           </label>
           <input
@@ -235,7 +238,7 @@ export default function ContactForm({
         </div>
 
         <div>
-          <label htmlFor="cf-telephone" className="block font-bold">
+          <label htmlFor="cf-telephone" className="block font-semibold">
             Téléphone <span aria-hidden="true">*</span>
           </label>
           <input
@@ -252,8 +255,8 @@ export default function ContactForm({
         </div>
 
         <div>
-          <label htmlFor="cf-email" className="block font-bold">
-            E-mail <span className="font-normal text-muted">(facultatif)</span>
+          <label htmlFor="cf-email" className="block font-semibold">
+            E-mail <span className="font-normal text-gris-ardoise">(facultatif)</span>
           </label>
           <input
             {...attributs('email')}
@@ -268,7 +271,7 @@ export default function ContactForm({
         </div>
 
         <div>
-          <label htmlFor="cf-commune" className="block font-bold">
+          <label htmlFor="cf-commune" className="block font-semibold">
             Commune des travaux <span aria-hidden="true">*</span>
           </label>
           <input
@@ -291,7 +294,7 @@ export default function ContactForm({
       </div>
 
       <div>
-        <label htmlFor="cf-travaux" className="block font-bold">
+        <label htmlFor="cf-travaux" className="block font-semibold">
           Type de travaux <span aria-hidden="true">*</span>
         </label>
         <select {...attributs('travaux')} required value={valeurs.travaux} onChange={modifier} className="field mt-2">
@@ -307,10 +310,10 @@ export default function ContactForm({
       </div>
 
       <div>
-        <label htmlFor="cf-message" className="block font-bold">
+        <label htmlFor="cf-message" className="block font-semibold">
           Votre projet <span aria-hidden="true">*</span>
         </label>
-        <p id="cf-message-aide" className="mt-1 text-sm text-muted">
+        <p id="cf-message-aide" className="mt-1 text-sm text-gris-ardoise">
           Type de logement, travaux envisagés, délai souhaité&nbsp;: quelques mots suffisent.
         </p>
         <textarea
@@ -332,16 +335,16 @@ export default function ContactForm({
             required
             checked={valeurs.consentement}
             onChange={modifier}
-            className="mt-1 size-5 shrink-0 accent-ink"
+            className="mt-1 size-5 shrink-0 accent-cuivre"
           />
           <label htmlFor="cf-consentement">
             J'accepte que les informations saisies soient utilisées pour me recontacter au sujet de ma demande.{' '}
             <span aria-hidden="true">*</span>
           </label>
         </div>
-        <p id="cf-consentement-aide" className="mt-2 pl-8 text-sm text-muted">
+        <p id="cf-consentement-aide" className="mt-2 pl-8 text-sm text-gris-ardoise">
           Vos données servent uniquement à traiter votre demande. Pour en savoir plus, consultez la{' '}
-          <a href={confidentialite} className="font-bold text-ink underline">
+          <a href={confidentialite} className="font-semibold text-cuivre underline">
             politique de confidentialité
           </a>
           .
@@ -366,8 +369,8 @@ export default function ContactForm({
       )}
 
       {statut === 'erreur' && (
-        <div role="alert" className="rounded-lg border-2 border-danger bg-white p-4">
-          <p className="font-bold text-danger">
+        <div role="alert" className="rounded-conteneur border-2 border-cuivre bg-tuffeau p-4">
+          <p className="font-semibold text-cuivre">
             {configure ? "L'envoi a échoué." : "L'envoi en ligne n'est pas encore activé."}
           </p>
           <p className="mt-1">

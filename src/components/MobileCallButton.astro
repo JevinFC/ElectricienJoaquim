@@ -4,14 +4,36 @@ import { site } from '../config/site.ts';
 
 // Affiché uniquement sous le point de rupture md. BaseLayout ajoute un padding-bottom
 // équivalent au <body> pour que ce bouton ne masque jamais le pied de page.
+// Pas d'ombre : une bordure fine le détache du contenu. Au focus, un halo tuffeau garde
+// le contour cuivre visible, y compris au-dessus du pied de page ardoise.
+// Masqué tant que le bouton d'appel du hero ([data-appel-principal]) est à l'écran :
+// le premier écran mobile n'affiche ainsi qu'un seul bouton « Appeler ».
 const { telephone } = site.contact;
 ---
 
 <a
   href={`tel:${telephone.lien}`}
-  class="btn btn-primary fixed inset-x-4 bottom-4 z-40 shadow-[0_8px_24px_rgb(31_35_40/0.25)] md:hidden"
+  data-barre-appel
+  class="btn btn-primary fixed inset-x-4 bottom-4 z-40 border border-bordure transition-[translate,opacity,visibility] focus-visible:shadow-[0_0_0_6px_var(--color-tuffeau)] data-masquee:invisible data-masquee:translate-y-4 data-masquee:opacity-0 md:hidden"
 >
   <Icon name="telephone" class="size-5" />
   <span>Appeler</span>
   <span class="font-normal">{telephone.affichage}</span>
 </a>
+
+<!--
+  Script en ligne, placé juste après le bouton : l'état initial est fixé avant le premier
+  affichage, sans clignotement. Sans JavaScript, la barre reste simplement visible.
+-->
+<script is:inline>
+  (() => {
+    const barre = document.querySelector('[data-barre-appel]');
+    const appelPrincipal = document.querySelector('[data-appel-principal]');
+    if (!barre || !appelPrincipal || !('IntersectionObserver' in window)) return;
+
+    barre.toggleAttribute('data-masquee', true);
+    new IntersectionObserver(([entree]) => {
+      barre.toggleAttribute('data-masquee', entree.isIntersecting);
+    }).observe(appelPrincipal);
+  })();
+</script>

@@ -1,31 +1,24 @@
 ---
-import CircuitPattern from './CircuitPattern.astro';
 import { site } from '../config/site.ts';
 
 const { zone } = site;
+// Communes en texte courant, plus discret qu'une grille : « Tours, Joué-lès-Tours… et Langeais ».
+const communes = new Intl.ListFormat('fr', { type: 'conjunction' }).format(zone.communes);
 ---
 
-<section class="relative isolate overflow-hidden border-t border-line" aria-labelledby="zone-titre">
-  <CircuitPattern class="absolute inset-0 -z-10 size-full text-ink" />
-  <div class="container-page grid gap-10 py-16 sm:py-24 lg:grid-cols-[2fr_3fr] lg:gap-16">
+<section class="border-t border-bordure py-16 sm:py-24" aria-labelledby="zone-titre">
+  <div class="container-page grid gap-8 lg:grid-cols-[2fr_3fr] lg:gap-16">
+    <h2 id="zone-titre" class="text-3xl leading-tight font-bold sm:text-4xl">J'interviens {zone.libelle}</h2>
     <div>
-      <p class="eyebrow">Zone d'intervention</p>
-      <h2 id="zone-titre" class="mt-3 text-3xl leading-tight font-bold sm:text-4xl">J'interviens {zone.libelle}</h2>
-      <p class="mt-4 text-muted">
+      <p class="text-lg">
         Je me déplace chez les particuliers dans tout le département ({zone.departement}, {zone.numeroDepartement}).
-        Votre commune n'apparaît pas dans la liste&nbsp;? Contactez-moi.
       </p>
+      <p class="mt-4 text-gris-ardoise">
+        <span class="font-semibold text-ardoise">Principales communes desservies&nbsp;:</span>
+        {communes}.
+      </p>
+      <p class="mt-4 text-gris-ardoise">Votre commune n'apparaît pas dans la liste&nbsp;? Contactez-moi.</p>
       <a href="/contact/" class="btn btn-secondary mt-8">Me contacter</a>
     </div>
-    <ul class="grid grid-cols-2 content-start gap-x-6 gap-y-3 sm:grid-cols-3" aria-label="Principales communes desservies">
-      {
-        zone.communes.map((commune) => (
-          <li class="flex items-center gap-2.5">
-            <span class="size-2.5 shrink-0 rounded-full border-2 border-ink" aria-hidden="true" />
-            {commune}
-          </li>
-        ))
-      }
-    </ul>
   </div>
 </section>

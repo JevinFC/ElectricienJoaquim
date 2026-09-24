@@ -1,0 +1,17 @@
+---
+interface Props {
+  /** Repère sur fond plein, comme le numéro d'un circuit : « C2 », « 37 », « Avant »… */
+  repere: string;
+  /** Libellé facultatif, affiché après le repère. */
+  texte?: string | undefined;
+  class?: string;
+}
+
+const { repere, texte, class: className } = Astro.props;
+---
+
+<!-- Signature graphique : étiquette de repérage, comme celles d'un tableau électrique (styles dans global.css). -->
+<span class:list={['etiquette', className]}>
+  <span class="etiquette-repere">{repere}</span>
+  {texte && <span>{texte}</span>}
+</span>

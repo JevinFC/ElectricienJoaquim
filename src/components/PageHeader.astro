@@ -1,5 +1,5 @@
 ---
-import CircuitPattern from './CircuitPattern.astro';
+import Etiquette from './Etiquette.astro';
 import Icon from './Icon.astro';
 
 interface Lien {
@@ -9,7 +9,8 @@ interface Lien {
 
 interface Props {
   titre: string;
-  eyebrow?: string;
+  /** Étiquette de repérage au-dessus du titre (pages des services, 404). */
+  etiquette?: { repere: string; texte?: string };
   intro?: string;
   /** Fil d'Ariane : pages parentes. La page courante est ajoutée à la fin. */
   fil?: Lien[];
@@ -17,34 +18,40 @@ interface Props {
   filCourant?: string;
 }
 
-const { titre, eyebrow, intro, fil, filCourant = titre } = Astro.props;
+const { titre, etiquette, intro, fil, filCourant = titre } = Astro.props;
 ---
 
-<section class="relative isolate overflow-hidden border-b border-line">
-  <CircuitPattern variant="hero" class="absolute inset-0 -z-10 size-full text-ink" />
-  <div class="container-page py-12 sm:py-20">
+<!-- En-tête des pages intérieures : bloc ardoise continu avec l'en-tête, filet cuivre de 3 px en bas. -->
+<section class="surface-dark border-b-[3px] border-cuivre bg-ardoise text-tuffeau">
+  <div class="container-page pt-10 pb-12 sm:pt-16 sm:pb-20">
     {
       fil && (
         <nav aria-label="Fil d'Ariane" class="mb-8 text-sm">
-          <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-muted">
+          <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sable">
             {fil.map(({ href, label }) => (
               <li class="flex items-center gap-2">
-                <a href={href} class="underline-offset-4 hover:text-ink hover:underline">
+                <a href={href} class="underline-offset-4 hover:text-tuffeau hover:underline">
                   {label}
                 </a>
                 <Icon name="chevron" class="size-4" />
               </li>
             ))}
-            <li aria-current="page" class="font-bold text-ink">
+            <li aria-current="page" class="font-semibold text-tuffeau">
               {filCourant}
             </li>
           </ol>
         </nav>
       )
     }
-    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
-    <h1 class="mt-4 max-w-3xl text-4xl leading-[1.1] font-bold tracking-tight sm:text-5xl">{titre}</h1>
-    {intro && <p class="mt-6 max-w-2xl text-lg text-muted sm:text-xl">{intro}</p>}
+    {
+      etiquette && (
+        <div class="mb-6">
+          <Etiquette {...etiquette} />
+        </div>
+      )
+    }
+    <h1 class="filet max-w-3xl text-4xl leading-[1.1] font-bold sm:text-5xl">{titre}</h1>
+    {intro && <p class="mt-6 max-w-2xl text-lg text-sable sm:text-xl">{intro}</p>}
     <slot />
   </div>
 </section>

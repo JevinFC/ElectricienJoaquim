@@ -2,43 +2,74 @@
 import Icon from './Icon.astro';
 import { site } from '../config/site.ts';
 
-// Ne s'affiche que si la config contient au moins un avis authentique (tableau vide par défaut).
+// Le premier avis en grand, les suivants en liste : pas de grille de cartes.
+// Sans avis authentique, la section reste masquée en production. En développement,
+// un emplacement réservé montre sa place dans la page.
 const { avis } = site;
-const etoiles = [1, 2, 3, 4, 5];
+const [premier, ...autres] = avis;
+const note = premier?.note;
+const emplacement = !premier && import.meta.env.DEV;
+const etoiles = [1, 2, 3, 4, 5] as const;
 ---
 
 {
-  avis.length > 0 && (
-    <section class="border-t border-line bg-paper-deep" aria-labelledby="avis-titre">
-      <div class="container-page py-16 sm:py-24">
-        <p class="eyebrow">Avis clients</p>
-        <h2 id="avis-titre" class="mt-3 text-3xl leading-tight font-bold sm:text-4xl">
-          Ils m'ont fait confiance
+  (premier || emplacement) && (
+    <section class="border-t border-bordure py-16 sm:py-24" aria-labelledby="avis-titre">
+      <div class="container-page">
+        <h2 id="avis-titre" class="text-3xl leading-tight font-bold sm:text-4xl">
+          Avis clients
         </h2>
-        <ul class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {avis.map(({ auteur, texte, commune, note, source }) => (
-            <li class="rounded-xl border border-line bg-white p-6 sm:p-8">
-              <figure class="flex h-full flex-col">
-                {note && (
-                  <p class="flex gap-1">
-                    <span class="sr-only">Note : {note} sur 5</span>
-                    {etoiles.map((rang) => (
-                      <Icon name="etoile" class={rang <= note ? 'size-5 fill-current' : 'size-5'} />
-                    ))}
-                  </p>
-                )}
-                <blockquote class="mt-4 flex-1">
-                  <p>«&nbsp;{texte}&nbsp;»</p>
-                </blockquote>
-                <figcaption class="mt-6 text-sm text-muted">
-                  <span class="font-bold text-ink">{auteur}</span>
-                  {commune && <span>, {commune}</span>}
-                  {source && <span> · {source}</span>}
-                </figcaption>
-              </figure>
-            </li>
-          ))}
-        </ul>
+        {premier ? (
+          <figure class="mt-10 max-w-4xl">
+            {note && (
+              <p class="flex gap-1 text-cuivre">
+                <span class="sr-only">Note&nbsp;: {note} sur 5</span>
+                {etoiles.map((rang) => (
+                  <Icon name="etoile" class={rang <= note ? 'size-5 fill-current' : 'size-5'} />
+                ))}
+              </p>
+            )}
+            <blockquote class="mt-4 font-titre text-2xl leading-snug sm:text-3xl">
+              <p>«&nbsp;{premier.texte}&nbsp;»</p>
+            </blockquote>
+            <figcaption class="mt-6 text-gris-ardoise">
+              <span class="font-semibold text-ardoise">{premier.auteur}</span>
+              {premier.commune && <span>, {premier.commune}</span>}
+              {premier.source && <span> · {premier.source}</span>}
+            </figcaption>
+          </figure>
+        ) : (
+          <>
+            <figure class="mt-10 max-w-4xl">
+              <blockquote class="font-titre text-2xl leading-snug text-gris-ardoise sm:text-3xl">
+                <p>«&nbsp;[Premier avis client, recopié tel quel depuis la fiche Google]&nbsp;»</p>
+              </blockquote>
+              <figcaption class="mt-6 text-gris-ardoise">[Prénom N.], [commune] · Google</figcaption>
+            </figure>
+            <p class="mt-8 max-w-2xl text-sm text-gris-ardoise">
+              Emplacement visible en développement uniquement&nbsp;: la section s'affichera en ligne dès le premier avis
+              ajouté dans <code>src/config/site.ts</code>.
+            </p>
+          </>
+        )}
+        {autres.length > 0 && (
+          <ul class="mt-12 max-w-3xl divide-y divide-bordure border-t border-bordure">
+            {autres.map(({ auteur, texte, commune, source }) => (
+              <li class="py-6">
+                <figure>
+                  <blockquote>
+                    <p>«&nbsp;{texte}&nbsp;»</p>
+                  </blockquote>
+                  <figcaption class="mt-3 text-sm text-gris-ardoise">
+                    <span class="font-semibold text-ardoise">{auteur}</span>
+                    {commune && <span>, {commune}</span>}
+                    {source && <span> · {source}</span>}
+                  </figcaption>
+                </figure>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </section>
   )

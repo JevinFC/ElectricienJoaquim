@@ -1,7 +1,6 @@
 import { defineCollection, reference } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
-import { iconNames } from './components/icons.ts';
 
 /**
  * Services : un fichier Markdown par service dans src/content/services/.
@@ -13,12 +12,16 @@ const services = defineCollection({
   schema: ({ image }) =>
     z.object({
       titre: z.string(),
-      // Texte court affiché sur les cartes et utilisé comme meta description.
+      // Meta description de la page du service, pour les moteurs de recherche.
       description: z.string().max(160),
-      icone: z.enum(iconNames),
-      // Ordre d'affichage croissant.
-      ordre: z.number().int(),
-      image: image(),
+      // Phrase courte, sans nom de ville, affichée sur les cartes et en introduction de la page.
+      resume: z.string().max(140),
+      // Libellé court de l'étiquette de repérage (« Rénovation »), après le repère C1, C2…
+      etiquette: z.string().max(24),
+      // Ordre d'affichage croissant ; donne aussi le repère de l'étiquette (1 → C1).
+      ordre: z.number().int().positive(),
+      // Photo facultative : sans elle, un emplacement réservé affiche `imageAlt`.
+      image: image().optional(),
       imageAlt: z.string(),
     }),
 });
@@ -40,8 +43,6 @@ const realisations = defineCollection({
       service: reference('services'),
       couverture: photo,
       photos: z.array(photo).default([]),
-      // true pour un chantier fictif de démonstration, signalé par un badge « Exemple ».
-      exemple: z.boolean().default(false),
     });
   },
 });

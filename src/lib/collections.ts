@@ -25,7 +25,14 @@ export async function getRealisations(): Promise<CollectionEntry<'realisations'>
   return realisations.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 }
 
-/** Titre d'un service à partir de son identifiant. */
-export function titreService(services: CollectionEntry<'services'>[], id: string): string {
-  return services.find((service) => service.id === id)?.data.titre ?? '';
+/** Service à partir de son identifiant (getRealisations garantit déjà son existence). */
+export function serviceParId(services: CollectionEntry<'services'>[], id: string): CollectionEntry<'services'> {
+  const service = services.find((candidat) => candidat.id === id);
+  if (!service) throw new Error(`Le service « ${id} » n'existe pas dans src/content/services/.`);
+  return service;
+}
+
+/** Repère d'un service sur les étiquettes, comme un numéro de circuit : ordre 2 → « C2 ». */
+export function repereService(service: CollectionEntry<'services'>): string {
+  return `C${service.data.ordre}`;
 }

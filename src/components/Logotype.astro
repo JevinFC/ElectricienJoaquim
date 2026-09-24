@@ -8,20 +8,16 @@ interface Props {
 const { class: className } = Astro.props;
 ---
 
-<span class:list={['inline-flex items-center gap-2.5 text-lg leading-none', className]}>
-  <svg viewBox="0 0 32 32" class="size-8 shrink-0" aria-hidden="true">
-    <path
-      d="M5 21h9l5-8h3"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"></path>
-    <circle cx="5" cy="21" r="3.5" class="fill-accent"></circle>
-    <circle cx="25.5" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-width="2.5"></circle>
-  </svg>
-  <span>
-    <span class="font-bold">{site.entreprise.nom}</span>
-    <span class="font-normal">Électricité</span>
-  </span>
+<!--
+  Logotype texte en Bitter, utilisé sur fond ardoise (en-tête, pied de page) :
+  nom en tuffeau, « Électricité » en cuivre-clair. Deux lignes sur mobile, une à partir de sm.
+-->
+<span
+  class:list={[
+    'inline-flex flex-col gap-0.5 font-titre text-lg leading-none font-bold sm:flex-row sm:gap-x-[0.3em]',
+    className,
+  ]}
+>
+  <span>{site.entreprise.nom}</span>
+  <span class="text-cuivre-clair">Électricité</span>
 </span>

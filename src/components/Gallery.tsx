@@ -19,8 +19,9 @@ export interface GalleryItem {
   /** Date lisible, par exemple « juin 2026 ». */
   dateLabel: string;
   serviceId: string;
-  serviceTitre: string;
-  exemple: boolean;
+  /** Repère et libellé de l'étiquette du service, par exemple « C2 » et « Rénovation ». */
+  serviceRepere: string;
+  serviceEtiquette: string;
   couverture: GalleryImage;
   /** Photos affichées dans la visionneuse, couverture comprise. */
   photos: GalleryImage[];
@@ -136,7 +137,7 @@ export default function Gallery({ items, services }: Props) {
               type="button"
               aria-pressed={filtre === id}
               onClick={() => setFiltre(id)}
-              className="min-h-11 rounded-full border-2 border-ink px-4 py-2 text-sm font-bold transition-colors hover:bg-paper-deep aria-pressed:bg-ink aria-pressed:text-paper"
+              className="min-h-11 rounded-controle border-2 border-cuivre px-4 py-2 text-sm font-semibold text-cuivre transition-colors hover:bg-tuffeau-clair aria-pressed:bg-cuivre aria-pressed:text-tuffeau"
             >
               {titre} <span className="font-normal">({total})</span>
             </button>
@@ -151,7 +152,7 @@ export default function Gallery({ items, services }: Props) {
       <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {visibles.map((item, position) => (
           <li key={item.id} id={`realisation-${item.id}`}>
-            <article className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-line bg-white transition-colors hover:border-ink has-[button:focus-visible]:outline-2 has-[button:focus-visible]:outline-offset-4 has-[button:focus-visible]:outline-ink">
+            <article className="group relative flex h-full flex-col overflow-hidden rounded-conteneur border border-bordure bg-tuffeau-clair transition-colors hover:border-cuivre has-[button:focus-visible]:outline-2 has-[button:focus-visible]:outline-offset-4 has-[button:focus-visible]:outline-cuivre">
               <div className="relative">
                 <img
                   src={item.couverture.src}
@@ -164,14 +165,17 @@ export default function Gallery({ items, services }: Props) {
                   decoding="async"
                   className="aspect-4/3 w-full object-cover"
                 />
-                {item.exemple && <span className="badge absolute top-3 left-3">Exemple</span>}
-                <span className="absolute right-3 bottom-3 rounded-md bg-ink/85 px-2 py-1 text-xs font-bold text-paper">
+                {/* Étiquette de repérage du service, comme sur les cartes Astro (styles dans global.css). */}
+                <span className="etiquette absolute top-3 left-3">
+                  <span className="etiquette-repere">{item.serviceRepere}</span>
+                  <span>{item.serviceEtiquette}</span>
+                </span>
+                <span className="absolute right-3 bottom-3 rounded-controle bg-ardoise px-2 py-1 text-xs font-semibold text-tuffeau">
                   {accorder(item.photos.length, 'photo', 'photos')}
                 </span>
               </div>
               <div className="flex flex-1 flex-col p-5">
-                <p className="text-sm text-muted">{item.serviceTitre}</p>
-                <h2 className="mt-1 text-lg leading-snug font-bold">
+                <h3 className="text-lg leading-snug font-bold">
                   <button
                     type="button"
                     onClick={() => setSelection({ id: item.id, index: 0 })}
@@ -181,8 +185,8 @@ export default function Gallery({ items, services }: Props) {
                     {item.titre}
                     <span className="sr-only"> : voir les photos</span>
                   </button>
-                </h2>
-                <p className="mt-auto pt-3 text-sm text-muted">
+                </h3>
+                <p className="mt-auto pt-3 text-sm text-gris-ardoise">
                   {item.ville} · <time dateTime={item.date}>{item.dateLabel}</time>
                 </p>
               </div>
@@ -197,7 +201,7 @@ export default function Gallery({ items, services }: Props) {
         onClose={fermer}
         onKeyDown={surTouche}
         onClick={surClic}
-        className="surface-dark fixed inset-0 m-0 size-full max-h-none max-w-none border-0 bg-transparent p-0 text-paper backdrop:bg-ink"
+        className="surface-dark fixed inset-0 m-0 size-full max-h-none max-w-none border-0 bg-transparent p-0 text-tuffeau backdrop:bg-ardoise"
       >
         {courant && photo && selection && (
           <div data-fond className="mx-auto flex h-full max-w-6xl flex-col px-4 py-4 sm:px-8 sm:py-6">
@@ -206,16 +210,15 @@ export default function Gallery({ items, services }: Props) {
                 <h2 id="visionneuse-titre" className="text-lg leading-snug font-bold sm:text-xl">
                   {courant.titre}
                 </h2>
-                <p className="mt-1 text-sm text-mist">
+                <p className="mt-1 text-sm text-sable">
                   {courant.ville} · {courant.dateLabel}
-                  {courant.exemple ? ' · Exemple' : ''}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={fermer}
                 aria-label="Fermer la visionneuse"
-                className="inline-flex size-12 shrink-0 items-center justify-center rounded-lg border-2 border-paper/40 transition-colors hover:border-paper"
+                className="inline-flex size-12 shrink-0 items-center justify-center rounded-controle border-2 border-sable transition-colors hover:border-tuffeau"
               >
                 <IconeFermer />
               </button>
@@ -232,7 +235,7 @@ export default function Gallery({ items, services }: Props) {
                 alt={photo.alt}
                 className="min-h-0 w-auto max-w-full flex-1 object-contain"
               />
-              <figcaption className="mt-3 text-center text-sm text-mist">
+              <figcaption className="mt-3 text-center text-sm text-sable">
                 Photo {selection.index + 1} sur {courant.photos.length}
               </figcaption>
             </figure>
@@ -243,7 +246,7 @@ export default function Gallery({ items, services }: Props) {
                   type="button"
                   onClick={() => naviguer(-1)}
                   aria-label="Photo précédente"
-                  className="inline-flex size-12 items-center justify-center rounded-lg border-2 border-paper/40 transition-colors hover:border-paper"
+                  className="inline-flex size-12 items-center justify-center rounded-controle border-2 border-sable transition-colors hover:border-tuffeau"
                 >
                   <IconeChevron sens="precedent" />
                 </button>
@@ -251,7 +254,7 @@ export default function Gallery({ items, services }: Props) {
                   type="button"
                   onClick={() => naviguer(1)}
                   aria-label="Photo suivante"
-                  className="inline-flex size-12 items-center justify-center rounded-lg border-2 border-paper/40 transition-colors hover:border-paper"
+                  className="inline-flex size-12 items-center justify-center rounded-controle border-2 border-sable transition-colors hover:border-tuffeau"
                 >
                   <IconeChevron sens="suivant" />
                 </button>

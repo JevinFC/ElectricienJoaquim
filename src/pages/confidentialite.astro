@@ -11,15 +11,12 @@ const adresse = `${contact.adresse.rue}, ${contact.adresse.codePostal} ${contact
   title="Politique de confidentialité"
   description={`Politique de confidentialité du site ${entreprise.nom} : données du formulaire de contact, durée de conservation et droits RGPD.`}
 >
-  <PageHeader fil={[{ href: '/', label: 'Accueil' }]} eyebrow="Informations légales" titre="Politique de confidentialité" />
+  <PageHeader fil={[{ href: '/', label: 'Accueil' }]} titre="Politique de confidentialité" />
 
   <div class="container-page py-14 sm:py-20">
     <div class="prose-content">
       <p><strong>Dernière mise à jour&nbsp;:</strong> {donneesPersonnelles.miseAJour}</p>
-      <p>
-        TODO : faire relire cette politique par le client, et idéalement par un professionnel du droit, avant la mise en
-        ligne.
-      </p>
+      {/* TODO : faire relire cette politique par le client, et idéalement par un professionnel du droit, avant la mise en ligne. */}
       <p>
         Cette page explique quelles données personnelles sont collectées sur ce site, dans quel but, et comment exercer vos
         droits, conformément au Règlement général sur la protection des données (RGPD) et à la loi Informatique et
@@ -28,7 +25,7 @@ const adresse = `${contact.adresse.rue}, ${contact.adresse.codePostal} ${contact
 
       <h2>Responsable du traitement</h2>
       <p>
-        {entreprise.nom}, représentée par {entreprise.gerant}, {adresse}. Contact&nbsp;:
+        L'entreprise {entreprise.nom}, dirigée par {entreprise.gerant}, {adresse}. Contact&nbsp;:
         <a href={`mailto:${contact.email}`}>{contact.email}</a> ou
         <a href={`tel:${contact.telephone.lien}`}>{contact.telephone.affichage}</a>.
       </p>
@@ -64,9 +61,10 @@ const adresse = `${contact.adresse.rue}, ${contact.adresse.codePostal} ${contact
       <h2>Transferts hors de l'Union européenne</h2>
       <p>
         L'hébergeur et le prestataire d'envoi du formulaire peuvent être établis hors de l'Union européenne, notamment aux
-        États-Unis. TODO : vérifier les garanties encadrant ces transferts (Data Privacy Framework UE–États-Unis ou clauses
-        contractuelles types de la Commission européenne) et les préciser ici.
+        États-Unis. [Garanties encadrant ces transferts, à préciser&nbsp;: Data Privacy Framework UE–États-Unis ou clauses
+        contractuelles types de la Commission européenne.]
       </p>
+      {/* TODO : vérifier les garanties des transferts hors UE, puis remplacer le texte entre crochets. */}
 
       <h2>Durée de conservation</h2>
       <p>
